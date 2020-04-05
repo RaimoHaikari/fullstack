@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+}
+
+.unicafeTitle {
+  background-color: black;
+  color: white;
+  font-family: verdana;
+  font-size: 2em;
+  padding: 10px;
+}
+
+.unicafeLabel {
+  font-family: verdana;
+  font-size: 1.5em;
+  padding: 10px;
+}
+
+/* */
+.unicafeMsg {
+  font-family: verdana;
+  font-size: 1.0em;
+  padding: 10px;
+  display: inline-block;
+}
+
+/* P A I N I K K E E T */
+.unicafeBtn {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+
+.bgGeen {background-color: #4CAF50;}
+.bgBlue {background-color: #008CBA;} /* Blue */
+.bgRed {background-color: #f44336;} /* Red */ 
+
+/* T I L A S T O   K O M P O N E N T T I */
+.unicafeStatsDiv {
+  padding: 20px;
+  border-top: 5px solid #008CBA;
+}
