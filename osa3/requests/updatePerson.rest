@@ -1,0 +1,7 @@
+PUT  http://localhost:3001/api/persons/61ec62421305f927bdf99733
+Content-Type: application/json
+
+{
+    "name": "Hanna Harvahammas-Tiainen",
+    "number": "39-060-666"
+}
