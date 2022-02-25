@@ -5,7 +5,13 @@ require('dotenv').config();
 
 let DB_USER = process.env.DB_USER;
 let DB_PASSWORD = process.env.DB_PASSWORD;
-let DB_NAME = process.env.DB_NAME;
+
+//let DB_NAME = process.env.DB_NAME;
+
+let DB_NAME = process.env.NODE_ENV === 'test'
+    ? process.env.TEST_DB_NAME
+    : process.env.DB_NAME
+
 let PORT = process.env.PORT;
 
 module.exports = {

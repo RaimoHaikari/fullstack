@@ -4,6 +4,5 @@ Content-Type: application/json
 {
     "title": "Tilanne joka selitykselle",
     "author": "Pentti Siimes",
-    "url": "www.selitysjokatilanteelle.com",
-    "likes": 0
+    "url": "www.selitysjokatilanteelle.com"
 }

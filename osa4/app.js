@@ -38,4 +38,11 @@ app.use(express.json());
  */
 app.use('/api/blogs', blogsRouter);
 
+
+/*
+ * - validointivirheiden käsittely
+ */
+const middleWare = require('./utils/middleWare');
+app.use(middleWare.errorHandler);
+
 module.exports = app;
