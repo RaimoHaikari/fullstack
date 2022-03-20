@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const supertest = require('supertest');
 
+const bcrypt = require('bcrypt');
+
 const helper = require('./testHelper');
 
 const app = require('../app');
@@ -8,6 +10,22 @@ const app = require('../app');
 const api = supertest(app);
 
 const Blog = require('../models/blog');
+const User = require('../models/user');
+
+const getToken = async (user = 'admin', pw = 'salainen') => {
+
+    const loggedUser = await api
+    .post('/api/login')
+        .send({
+            username: user,
+            password: pw
+        });
+
+    const token = loggedUser.body.token;
+
+    return token;
+}
+
 
 describe('when there are initially some blogs saved', () => {
 
@@ -19,14 +37,27 @@ describe('when there are initially some blogs saved', () => {
     */
     beforeEach(async () => {
 
-        await Blog.deleteMany({});
+        await User.deleteMany({});
 
+        const passwordHash = await bcrypt.hash('salainen', 10);
+        const user = new User({username: 'admin', passwordHash});
+        await user.save();
+        const id = user._id;
+        
+        await Blog.deleteMany({});
         for(let blog of helper.initialBlogs){
-            let blogObject = new Blog(blog);
+            let blogObject = new Blog({
+                ...blog,
+                user: id
+            });
             await blogObject.save();
         }
+    
     });
 
+    /*
+     * OK: 04.03.2022
+     */
     describe('data form and amounth match', () => {
 
         /*
@@ -48,6 +79,9 @@ describe('when there are initially some blogs saved', () => {
 
     });
 
+    /*
+     * OK: 04.03.2022
+     */
     describe('blog data matches criteria', () => {
 
         /*
@@ -57,6 +91,15 @@ describe('when there are initially some blogs saved', () => {
         */
         test('identifying field is named id', async () => {
 
+            const loggedUser = await api
+                .post('/api/login')
+                .send({
+                    username: 'admin',
+                    password:'salainen'
+                });
+
+            const token = await getToken();
+
             const addedBlog = await api
                 .post('/api/blogs')
                 .send({
@@ -65,15 +108,18 @@ describe('when there are initially some blogs saved', () => {
                     url: "http://flattires.com",
                     likes: 3,
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(201)
                 .expect('Content-Type', /application\/json/);
 
             expect(addedBlog.body.id).toBeDefined();
 
-
-        });
     });
 
+    
+    /*
+     * OK: 04.03.2022
+     */
     describe('adding a new blog', () => {
 
         /*
@@ -89,10 +135,13 @@ describe('when there are initially some blogs saved', () => {
                 url: "http://flattires.com",
                 likes: 3,
             }
+
+            const token = await getToken();
     
             await api
                 .post('/api/blogs')
                 .send(newBlog)
+                .set({ Authorization: `bearer ${token}` })
                 .expect(201)
                 .expect('Content-Type', /application\/json/);
     
@@ -103,12 +152,38 @@ describe('when there are initially some blogs saved', () => {
             expect(response.body).toHaveLength(helper.initialBlogs.length + 1);
             expect(titles).toContain(newBlog.title);
         })
+
+        test('fails it user data is not ok', async() => {
+
+            const newBlog = {
+                title: "It is about time to change tires",
+                author: "I B Freely",
+                url: "http://flattires.com",
+                likes: 3,
+            }
+    
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(401)
+                .expect('Content-Type', /application\/json/);
+    
+            const response = await api.get('/api/blogs');
+    
+            const titles = response.body.map(r => r.title);
+    
+            expect(response.body).toHaveLength(helper.initialBlogs.length);
+            expect(titles).not.toContain(newBlog.title);
+
+        } )
     
         /* 
          * 4.11*: blogilistan testit, step4
          * - Tee testi, joka varmistaa, että jos kentälle likes ei anneta arvoa, asetetaan sen arvoksi 0.
          */
         test('likes is set to 0, if value is omitted', async() => {
+
+            const token = await getToken();
     
             const withoutLikesValue = await api
                 .post('/api/blogs')
@@ -117,6 +192,7 @@ describe('when there are initially some blogs saved', () => {
                     author: "I B Freely",
                     url: "http://flattires.com"
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(201)
                 .expect('Content-Type', /application\/json/);
     
@@ -131,6 +207,7 @@ describe('when there are initially some blogs saved', () => {
                     url: "http://ghostbusters.com",
                     likes: 9           
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(201)
                 .expect('Content-Type', /application\/json/);
     
@@ -146,6 +223,8 @@ describe('when there are initially some blogs saved', () => {
         */
         test('title and url fields are required', async () => {
 
+            const token = await getToken();
+
             await api
                 .post('/api/blogs')
                 .send({
@@ -153,6 +232,7 @@ describe('when there are initially some blogs saved', () => {
                     author: "Louis Armstrong",
                     url: "http://jazz.org"
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(400);
 
                 await api
@@ -162,6 +242,7 @@ describe('when there are initially some blogs saved', () => {
                     author: "Zodiac",
                     homepage: "http://crime.info"
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(400);
 
                 const response = await api.get('/api/blogs')
@@ -171,19 +252,33 @@ describe('when there are initially some blogs saved', () => {
         });
     });
 
+    /*
+     * OK: 05.03.2022
+     */
     describe('deleting a blog', () => {
 
         /*
          * 4.13 blogilistan laajennus, step1
          * - Toteuta sovellukseen mahdollisuus yksittäisen blogin poistoon.
+         * 
+         * 4.21*: blogilistan laajennus, step9
+         * - Muuta blogin poistavaa operaatiota siten, että poisto onnistuu ainoastaan
+         *   jos poisto-operaation tekijä (eli se kenen token on pyynnön mukana) on sama 
+         *   kuin blogin lisääjä.
          */
-        test('succeeds with status code 204 if id is valid', async () => {
+
+
+        test('logged owner is able to delete blog', async () => {
+
 
             const blogsAtStart = await helper.blogsInDb();
             const blogToDelete = blogsAtStart[0];
 
+            const token = await getToken();
+
             await api
                 .delete(`/api/blogs/${blogToDelete.id}`)
+                .set({ Authorization: `bearer ${token}` })
                 .expect(204);
 
             const blogsAtEnd = await helper.blogsInDb();
@@ -196,17 +291,54 @@ describe('when there are initially some blogs saved', () => {
             expect(titles).not.toContain(blogToDelete.title);
 
         });
+        
+    
+        test('only creator can delete blog', async () => {
 
-    });
+            // - luodaan uusi käyttäjä
+            const passwordHash = await bcrypt.hash('nenialas', 10);
+            const resu = new User({username: 'nimda', passwordHash});
+            await resu.save();
+
+            // - uusi käyttäjä kirjautuu sisään
+            const token = await getToken('nimda', 'nenialas');
+
+            // - valitaan poistettavaksi haluttu blogi
+            const blogsAtStart = await helper.blogsInDb();
+            const blogToDelete = blogsAtStart[0];
+
+            // - yritetään poistaa em. blogi
+            await api
+                .delete(`/api/blogs/${blogToDelete.id}`)
+                .set({ Authorization: `bearer ${token}` })
+                .expect(401);
+
+            
+            // - onko lukumäärä ennallaan?
+            const blogsAtEnd = await helper.blogsInDb();
+
+            expect(blogsAtEnd).toHaveLength(
+                helper.initialBlogs.length
+            );
+            
+
+        });
+        
+
+    });    
+
 
     /*
+     * OK 6.3.2022
+     *
      * 4.14* blogilistan laajennus, step2
      * - Toteuta sovellukseen mahdollisuus yksittäisen blogin muokkaamiseen.
      * - Toteuttaa ominaisuudelle myös testit.
      */
     describe('updating a blog', () => {
 
-        test('succeeds with valid id and data', async() => {
+        
+        test('creator can update with valid id and data', async() => {
 
             const blogsAtStart = await helper.blogsInDb();
 
@@ -216,24 +348,61 @@ describe('when there are initially some blogs saved', () => {
                 author: "Jarkko Laine",
                 url: "https://badding.com/",
                 likes: 10          
-            }
+            };
+
+            const token = await getToken();
 
             const updatedBlog = await api
                 .put(`/api/blogs/${blogToUpdate.id}`)
                 .send(modifiedBlog)
+                .set({ Authorization: `bearer ${token}` })
                 .expect(200)
                 .expect('Content-Type', /application\/json/);
 
+            // Tiputetaan vertailusta dokumentin omistajan id
+            delete updatedBlog.body.user;
+
             expect(updatedBlog.body).toEqual({
                 ...modifiedBlog,
-                id: blogToUpdate.id
+                id: blogToUpdate.id,
             });
 
         });
 
+        test(`fails if 'someone else' is trying to update document`, async () => {
+
+            // - luodaan uusi käyttäjä
+            const passwordHash = await bcrypt.hash('nenialas', 10);
+            const resu = new User({username: 'nimda', passwordHash});
+            await resu.save();
+
+            // - uusi käyttäjä kirjautuu sisään
+            const token = await getToken('nimda', 'nenialas');   
+            
+            // - valitaan päivitettävä blogitietue
+            const blogsAtStart = await helper.blogsInDb();
+
+            const blogToUpdate = blogsAtStart[0];
+            const modifiedBlog = {
+                title: "Fiilaten ja höyläten",
+                author: "Jarkko Laine",
+                url: "https://badding.com/",
+                likes: 10          
+            };
+
+
+            await api
+                .put(`/api/blogs/${blogToUpdate.id}`)
+                .send(modifiedBlog)
+                .set({ Authorization: `bearer ${token}` })
+                .expect(401)
+                .expect('Content-Type', /application\/json/);
+
+        });
+        
         test('fails if id is invalid', async () => {
 
-            const invalidId = `${helper.nonExixtingId()}XXX`;
+            const invalidId = `${helper.nonExixtingId()}`;
 
             const modifiedBlog = {
                 title: "Fiilaten ja höyläten",
@@ -242,17 +411,23 @@ describe('when there are initially some blogs saved', () => {
                 likes: 10          
             }
 
+            const token = await getToken();
+
             const updatedBlog = await api
                 .put(`/api/blogs/${invalidId}`)
                 .send(modifiedBlog)
+                .set({ Authorization: `bearer ${token}` })
                 .expect(400);
         });
 
+        
         test('fails if likes value is not number', async () => {
 
             const blogsAtStart = await helper.blogsInDb();
 
             const blogToUpdate = blogsAtStart[0];
+
+            const token = await getToken();
 
             await api
                 .put(`/api/blogs/${blogToUpdate.id}`)
@@ -262,16 +437,126 @@ describe('when there are initially some blogs saved', () => {
                     url: "https://badding.com/",
                     likes: "Sikailija Sid"          
                 })
+                .set({ Authorization: `bearer ${token}` })
                 .expect(400);
 
-
-
         });
-
-
+        
     });
 
 
+});
+
+describe('when there is initially one user at db', () => {
+
+    beforeEach(async () => {
+
+        await User.deleteMany({});
+
+        const passwordHash = await bcrypt.hash('salainen', 10);
+        const user = new User({username: 'admin', passwordHash});
+
+        await user.save();
+    });
+
+    test('creation succeeds with a fresh username', async () => {
+
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: 'tumppi',
+            name: 'Tuomo Turskanpää',
+            password: 'maitipuoli'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(201)
+            .expect('Content-Type', /application\/json/);
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length + 1);
+
+        const usernames = usersAtEnd.map(u => u.username);
+        expect(usernames).toContain(newUser.username);
+    });
+
+    test('creation fails with proper statuscode and message if username is alredy in use', async () => {
+        
+        const usersAtStart = await helper.usersInDb();
+
+        const newUser = {
+            username: 'admin',
+            name: 'Sirpa Silakka',
+            password: 'abba'
+        };    
+        
+        const result = await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(result.body.error).toContain('username must be unique');
+
+    });
+
+    test('username is required and has to have atleast three characters', async () => {
+
+        const usersAtStart = await helper.usersInDb();
+        
+        const resultA = await api
+            .post('/api/users')
+            .send({
+                username: 'u2',
+                name: 'Yeah Yeah',
+                password: 'bono'
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(resultA.body.error.toLowerCase()).toContain('is shorter than the minimum allowed length');
+
+        const resultB = await api
+            .post('/api/users')
+            .send({
+                usernamePP: 'uTwo',
+                name: 'Rock Rock Rock',
+                passwoord: 'u2OOO'
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+    });
+
+    test('password is required and has to have atleast three characters', async () => {
+
+        const usersAtStart = await helper.usersInDb();
+
+        const resultA = await api
+            .post('/api/users')
+            .send({
+                username: 'uTwo',
+                name: 'Rock Rock Rock',
+                password: 'u2'
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(resultA.body.error).toContain('Password is shorter than the minimum allowed length (3)');
+
+        const resultB = await api
+            .post('/api/users')
+            .send({
+                username: 'uTwo',
+                name: 'Rock Rock Rock',
+                passwoordi: 'u2OOO'
+            })
+            .expect(400)
+            .expect('Content-Type', /application\/json/);
+
+        expect(resultB.body.error).toContain('Password is required');
+    });
 });
 
 

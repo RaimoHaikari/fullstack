@@ -1,8 +1,9 @@
 POST http://localhost:3003/api/blogs/
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImViYmEiLCJpZCI6IjYyMjBkNDc3MDIxMWUwOWY3ZDRkZjhmNyIsImlhdCI6MTY0NzYxMDUxNn0.ru-HsR1rUxaBDXxtDW6HLcoYVszYBSf34YLV7DQodZo
 
 {
-    "title": "Tilanne joka selitykselle",
-    "author": "Pentti Siimes",
-    "url": "www.selitysjokatilanteelle.com"
+    "title": "Bearer Tokenin tuo",
+    "author": "Jokuhan se oli",
+    "url": "www.fullstack.com"
 }

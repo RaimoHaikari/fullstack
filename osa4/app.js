@@ -4,6 +4,11 @@ const express = require('express');
 const app = express();
 
 /*
+ * DIY middleware
+ */
+const middleWare = require('./utils/middleWare');
+
+/*
  * Voimme sallia muista origineista tulevat pyynnöt käyttämällä Noden cors-middlewarea.
  */
 const cors = require('cors');
@@ -13,6 +18,17 @@ const cors = require('cors');
  * - napataan käyttöön sovelluksen rajapinnan määrittävät routet
  */
 const blogsRouter = require('./controllers/blogs');
+
+/*
+ * - käyttäjienhallintaan liittyvät routet
+ */
+const usersRouter = require('./controllers/users');
+
+/*
+ * - kirjautumiseen liittyvät routet
+ */
+const loginRouter = require('./controllers/login');
+
 
 const logger = require('./utils/logger');
 
@@ -34,15 +50,33 @@ app.use(cors());
 app.use(express.json());
 
 /*
- * - kiinnitetään blogsRouter polkuun /api/blogs
+ * - autentikoinnissa käytetyn tokenin käsittely
  */
-app.use('/api/blogs', blogsRouter);
+app.use(middleWare.tokenExtractor);
 
+/*
+ * - kiinnitetään blogsRouter polkuun /api/blogs
+ *
+ * 4.22*: blogilistan laajennus, step10
+ * - Tee nyt uusi middleware userExtractor, joka selvittää pyyntöön liittyvän käyttäjän
+ *   ja sijoittaa sen request-olioon. 
+ */
+app.use('/api/blogs', middleWare.userExtractor, blogsRouter);
+
+/*
+ * - kiinnitetään usersRouter polkuun /api/users
+ */
+app.use('/api/users', usersRouter);
+
+/*
+ * - kiinnitetään loginRouter polkuun /api/login
+ */
+app.use('/api/login', loginRouter);
 
 /*
  * - validointivirheiden käsittely
  */
-const middleWare = require('./utils/middleWare');
 app.use(middleWare.errorHandler);
+
 
 module.exports = app;
