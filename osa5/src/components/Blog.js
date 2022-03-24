@@ -3,11 +3,11 @@ import { useState } from 'react'
 
 import propTypes from 'prop-types'
 
-import blogService from '../services/blogs'
+//import blogService from '../services/blogs'
 
 import TextAndButton from './TextAndButton'
 
-const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
+const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
 
   const titleSpanStyle = {
     fontWeight: 'bolder'
@@ -22,11 +22,32 @@ const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
     padding: '2px',
   }
 
-  const [isExpanded, setExpanded] = useState(blog.expanded)
-  const [likeCount, setLikeCount] = useState(blog.likes)
+  /*
+   * React make useState initial value conditional
+   * - https://stackoverflow.com/questions/68945060/react-make-usestate-initial-value-conditional
+   *
+   * 5.13: blogilistan testit, step1
+   * - Tee testi, joka varmistaa että blogin näyttävä komponentti renderöi blogin titlen, authorin mutta ei renderöi oletusarvoisesti urlia eikä likejen määrää.
+   *   OLETUSARVOISESTI MINULLA AINEISTON LUKEMISEN YHTEYDESSÄ LISÄTÄÄN JOKAISELLE BLOGIOBJEKTILLE KENTTÄ EXPANDED JA SILLE ANNETAAN ARVO FALSE,
+   *   MUTTA VÄSÄTÄÄN TESTIÄ VARTEN VAIHTOEHTO, JOSSA TÄTÄ KENTTÄÄ EI OLE ASETETTU...
+   */
+  const expensiveFunction = () => {
+
+    return typeof blog === 'undefined'
+      ? false
+      : typeof blog.expanded === 'undefined'
+        ? false
+        : blog.expanded
+
+  }
+
+
+  const [isExpanded, setExpanded] = useState(() => expensiveFunction())
+
+  //const [likeCount, setLikeCount] = useState(blog.likes)
 
   /*
-   *
+   * <span style={titleSpanStyle}>{`${blog.title} [${blog.author}]`}</span>
    */
   const longSheet = () => {
     return (
@@ -45,7 +66,7 @@ const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
           btlLabel = "like"
           btnHandler = {likeButtonHandler}
         >
-          <span>{`likes ${likeCount}`}</span>
+          <span>{`likes ${blog.likes}`}</span>
         </TextAndButton>
 
         <p style={pStyle}>{`was added by: ${blog.user.name}`}</p>
@@ -79,8 +100,7 @@ const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
 
   /*
    * displayMessage(false, 'Kirjautuminen epäonnistui.');
-   */
-  const likeButtonHandler = async () => {
+  const likeButtonHandlerBAK = async () => {
 
     try {
 
@@ -105,6 +125,23 @@ const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
 
     }
   }
+  */
+
+  /*
+   * displayMessage(false, 'Kirjautuminen epäonnistui.');
+   */
+  const likeButtonHandler = async () => {
+
+    const newLikeCount = blog.likes + 1
+
+    const updatedBlog = {
+      ...blog,
+      likes: newLikeCount
+    }
+
+    likeBtnHandler(updatedBlog)
+
+  }
 
   return(
     <>
@@ -119,7 +156,7 @@ const Blog = ({ blog, messageHandler, removeBtnHandler }) => {
 
 Blog.propTypes = {
   blog: propTypes.object.isRequired,
-  messageHandler: propTypes.func.isRequired,
+  likeBtnHandler: propTypes.func.isRequired,
   removeBtnHandler: propTypes.func.isRequired
 }
 

@@ -11,7 +11,7 @@ const TextAndButton = (props) => {
   const { btnHandler, btlLabel } = props
 
   return (
-    <div>
+    <div className='textAndButton'>
       {props.children}
       <button
         onClick={btnHandler}

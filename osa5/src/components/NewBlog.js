@@ -52,6 +52,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           value={title}
           name="Title"
           onChange={({ target }) => setTitle(target.value)}
+          placeholder='title of the blog'
         />
 
       </div>
@@ -63,6 +64,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           value={author}
           name="Author"
           onChange={({ target }) => setAuthor(target.value)}
+          placeholder='author of the blog'
         />
       </div>
 
@@ -73,6 +75,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           value={url}
           name="Url"
           onChange={({ target }) => setUrl(target.value)}
+          placeholder='url of the blog'
         />
       </div>
 

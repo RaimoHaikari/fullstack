@@ -49,7 +49,7 @@ const App = () => {
         .map(blog => {
           return {
             ...blog,
-            expanded: true
+            expanded: false
           }
         })
         .sort((a,b) => {
@@ -130,7 +130,7 @@ const App = () => {
           <Blog
             key={blog.id}
             blog={blog}
-            messageHandler={displayMessage}
+            likeBtnHandler={handleLike}
             removeBtnHandler={handleRemove}
           />
 
@@ -208,6 +208,39 @@ const App = () => {
       console.log(exception)
 
       displayMessage(false, 'Adding failed. Check that your data is correct')
+
+    }
+
+  }
+
+  /*
+   * 5.15: blogilistan testit, step3
+   *
+   * - Tee testi, joka varmistaa, että jos komponentin like-nappia painetaan kahdesti,
+   *   KOMPONENTIN PROPSINA SAAMAA TAPAHTUMANKÄSITTELIJÄFUNKTIOTA KUTSUTAAN KAKSI KERTAA.
+   */
+  const handleLike = async updatedBlog => {
+
+    try {
+
+      await blogService.update(updatedBlog)
+
+      const updatedBlogs = blogs.map(blog => {
+        if(blog.id === updatedBlog.id)
+          return updatedBlog
+
+        return blog
+      })
+
+      displayMessage(true, 'Tykkään, tykkään, tykkään....')
+      setBlogs(updatedBlogs)
+
+    } catch (exception) {
+
+      console.log('Tykkäys ei onnistunut')
+      console.log(exception)
+
+      displayMessage(false, `${exception.response.data.error}`)
 
     }
 
