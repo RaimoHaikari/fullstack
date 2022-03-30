@@ -57,7 +57,7 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
           btlLabel = {isExpanded ? 'hide' : 'view'}
           btnHandler = {() => setExpanded(!isExpanded)}
         >
-          <span style={titleSpanStyle}>{`${blog.title} [${blog.author}]`}</span>
+          <span style={titleSpanStyle} className="blogAppBlogTitle">{`${blog.title} [${blog.author}]`}</span>
         </TextAndButton>
 
         <p style={pStyle}>{blog.url}</p>
@@ -92,7 +92,7 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
           btlLabel = {isExpanded ? 'hide' : 'view'}
           btnHandler = {() => setExpanded(!isExpanded)}
         >
-          <span style={titleSpanStyle}>{`${blog.title}`}</span>
+          <span className="blogAppBlogTitle" style={titleSpanStyle}>{`${blog.title}`}</span>
         </TextAndButton>
       </div>
     )

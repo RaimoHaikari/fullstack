@@ -9,6 +9,7 @@ const LoginForm = ({ password, passwordChangeHandler, username, usernameChangeHa
 
     <form
       onSubmit={submitHanler}
+      id="blogAppLoginForm"
     >
       <div>
             username
@@ -17,6 +18,8 @@ const LoginForm = ({ password, passwordChangeHandler, username, usernameChangeHa
           value={username}
           name="Username"
           onChange={({ target }) => usernameChangeHandler(target.value)}
+          placeholder="tilli"
+          id="blogAppLoginFormUsernameField"
         />
             password
         <input
@@ -24,10 +27,15 @@ const LoginForm = ({ password, passwordChangeHandler, username, usernameChangeHa
           value={password}
           name="Password"
           onChange={({ target }) => passwordChangeHandler(target.value)}
+          placeholder="accad"
+          id="blogAppLoginFormPasswordField"
         />
       </div>
 
-      <button type="submit">Login</button>
+      <button
+        type="submit"
+        id="blogAppLoginFormSubmitButton"
+      >Login</button>
 
     </form>
   )

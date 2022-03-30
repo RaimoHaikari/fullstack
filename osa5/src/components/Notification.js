@@ -16,7 +16,9 @@ const Notification = ({ message, success }) => {
         padding: '10px 10px',
         marginBottom: '5px'
       }
-    }>
+    }
+    id="blogAppNoticationDiv"
+    >
       {message}
     </div>
   )

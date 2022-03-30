@@ -48,6 +48,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
       <div style={{ marginBottom: '10px' }}>
                 title:
         <input
+          id='blogAppNewBlogTitle'
           type="text"
           value={title}
           name="Title"
@@ -60,6 +61,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
       <div style={{ marginBottom: '10px' }}>
                 author:
         <input
+          id='blogAppNewBlogAuthor'
           type="text"
           value={author}
           name="Author"
@@ -71,6 +73,7 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
       <div style={{ marginBottom: '10px' }}>
         url:
         <input
+          id='blogAppNewBlogUrl'
           type="text"
           value={url}
           name="Url"
@@ -80,7 +83,9 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
       </div>
 
       <div style={{ marginBottom: '10px' }}>
-        <button type='submit'>Create</button>
+        <button
+          id='blogAppNewBlogCreate'
+          type='submit'>Create</button>
       </div>
 
     </form>

@@ -157,6 +157,8 @@ const App = () => {
       )
 
       setUser(user)
+      blogService.setToken(user.token)
+
       displayMessage(true, `Tervetuloa ${user.name}`)
       clearUserData()
 
@@ -164,6 +166,8 @@ const App = () => {
 
       displayMessage(false, 'Kirjautuminen epäonnistui.')
       clearUserData()
+
+      //setMessageObject({ success: false, message: 'Kirjautuminen epäonnistui.' })
 
     }
   }
@@ -190,11 +194,15 @@ const App = () => {
 
     try {
 
-      await blogService.create(newBlog)
+      /*
+       * Napataan talteen serverin palauttama tallennettu tietue ja käytetään sitä
+       * listauksen päivityksessä....
+       */
+      const addedBlog = await blogService.create(newBlog)
 
-      setBlogs(blogs.concat(newBlog))
+      setBlogs(blogs.concat(addedBlog))
 
-      displayMessage(true, `A new blog: ${newBlog.title} by ${newBlog.author} added`)
+      displayMessage(true, `A new blog: ${addedBlog.title} by ${addedBlog.author} added`)
 
       /* - suljetaan ja tyhjennetään blogitietojen syöttölomake */
       togglableRef.current.toggleVisibility()
