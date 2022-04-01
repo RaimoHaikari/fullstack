@@ -1,10 +1,10 @@
 PUT http://localhost:3003/api/blogs/62348ac6dc9e38be69e9421d
 Content-Type: application/json
-Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImViYmEiLCJpZCI6IjYyMjBkNDc3MDIxMWUwOWY3ZDRkZjhmNyIsImlhdCI6MTY0NzYxMDUxNn0.ru-HsR1rUxaBDXxtDW6HLcoYVszYBSf34YLV7DQodZo
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRpbGxpIiwiaWQiOiI2MjM3ODcyNGIwZWVmODJkMTQ3MmFmMjEiLCJpYXQiOjE2NDg3MjcxMzJ9.rCu2WNp_ALMbc-1CFsSazvk1_dlJu34HBO26POTAjdE
 
 {
     "title": "Tilanne joka selitykselle",
     "author": "Pentti Siimes",
     "url": "www.selitysjokatilanteelle.com",
-    "likes": 1
+    "likes": 7
 }

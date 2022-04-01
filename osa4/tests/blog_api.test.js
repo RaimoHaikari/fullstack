@@ -56,8 +56,8 @@ describe('when there are initially some blogs saved', () => {
     });
 
     /*
-     * OK: 04.03.2022
-     */
+    * OK: 04.03.2022
+    */
     describe('data form and amounth match', () => {
 
         /*
@@ -78,6 +78,7 @@ describe('when there are initially some blogs saved', () => {
         });
 
     });
+
 
     /*
      * OK: 04.03.2022
@@ -114,7 +115,10 @@ describe('when there are initially some blogs saved', () => {
 
             expect(addedBlog.body.id).toBeDefined();
 
+        })
+
     });
+
 
     
     /*
@@ -252,6 +256,7 @@ describe('when there are initially some blogs saved', () => {
         });
     });
 
+
     /*
      * OK: 05.03.2022
      */
@@ -325,8 +330,8 @@ describe('when there are initially some blogs saved', () => {
         });
         
 
-    });    
-
+    });
+    
 
     /*
      * OK 6.3.2022
@@ -369,8 +374,8 @@ describe('when there are initially some blogs saved', () => {
 
         });
 
-        test(`fails if 'someone else' is trying to update document`, async () => {
-
+        test(`'someone else' can like the blog, but can't update anything else`, async () => {
+    
             // - luodaan uusi käyttäjä
             const passwordHash = await bcrypt.hash('nenialas', 10);
             const resu = new User({username: 'nimda', passwordHash});
@@ -378,18 +383,70 @@ describe('when there are initially some blogs saved', () => {
 
             // - uusi käyttäjä kirjautuu sisään
             const token = await getToken('nimda', 'nenialas');   
-            
+
             // - valitaan päivitettävä blogitietue
             const blogsAtStart = await helper.blogsInDb();
 
+            /*
+            * 1) tykkäys pitää onnistua, kun mihinkään muuhun ei ole koskettu
+            */
             const blogToUpdate = blogsAtStart[0];
+
+            const likedBlog = {
+                ...blogToUpdate,
+                likes: blogToUpdate.likes + 1     
+            };
+
+            await api
+                .put(`/api/blogs/${blogToUpdate.id}`)
+                .send(likedBlog)
+                .set({ Authorization: `bearer ${token}` })
+                .expect(200)
+                .expect('Content-Type', /application\/json/);
+
+
+            /*
+            * 2) Jos yritetään muuttaa kaikkea muutakin, niin ainoastaan liken osalta
+            *    muutos menee läpi
+            */
+            const updatedBlog = await api
+                .put(`/api/blogs/${blogToUpdate.id}`)
+                .send({
+                    title: "Fiilaten ja höyläten",
+                    author: "Jarkko Laine",
+                    url: "https://badding.com/",
+                    likes: 10          
+                })
+                .set({ Authorization: `bearer ${token}` })
+                .expect(200)
+                .expect('Content-Type', /application\/json/);
+
+            /*
+            * Vertaillaan päivitettyn blogin sisältöä alkuperäiseen
+            * - likes pitää olla päivittynyt KAKSI kertaa
+            * - tiputetaan omistajatieto vertailusta
+            */
+
+            const _updatedBlog = {
+                ...(delete updatedBlog.body.user && updatedBlog.body)
+            }
+
+            const _orginalBlogLiked2Times = {
+                ...(delete blogToUpdate.user && blogToUpdate),
+                likes: blogToUpdate.likes + 2
+            }
+
+            expect(_updatedBlog).toEqual(_orginalBlogLiked2Times);
+
+            /*
+            * 3) Muuten kuin liken osalta muokattu dokumentti
+            */
+            
             const modifiedBlog = {
                 title: "Fiilaten ja höyläten",
                 author: "Jarkko Laine",
                 url: "https://badding.com/",
-                likes: 10          
             };
-
 
             await api
                 .put(`/api/blogs/${blogToUpdate.id}`)
@@ -397,8 +454,8 @@ describe('when there are initially some blogs saved', () => {
                 .set({ Authorization: `bearer ${token}` })
                 .expect(401)
                 .expect('Content-Type', /application\/json/);
-
         });
+        
         
         test('fails if id is invalid', async () => {
 
@@ -444,8 +501,8 @@ describe('when there are initially some blogs saved', () => {
         
     });
 
-
 });
+
 
 describe('when there is initially one user at db', () => {
 
@@ -558,7 +615,6 @@ describe('when there is initially one user at db', () => {
         expect(resultB.body.error).toContain('Password is required');
     });
 });
-
 
 /*
  * Lopputoimenpiteenä katkaistaan Mongoosen käyttämä tietokantayhteys.

@@ -81,6 +81,7 @@ const getTokenFrom = request => {
     return null;
 }
 
+
 blogsRouter.get('/', async (req, res) => {
 
     const blogs =  await Blog
@@ -134,9 +135,15 @@ blogsRouter.post('/', async (req, res, next) => {
 
         /* Talletetaan tieto käyttäjän blogilistaan */
         user.blogs = user.blogs.concat(savedBlog._id);
+
         await user.save();
-    
-        res.status(201).json(savedBlog);
+
+        /* Palautetaa luotu blogi käyttäjätiedoilla terästettynä */
+        const finalBlog = await Blog
+            .findById(savedBlog._id)
+            .populate('user')
+
+        res.status(201).json(finalBlog);
 
     } catch (exeption) {
         next(exeption);
@@ -185,6 +192,12 @@ blogsRouter.delete('/:id', async (req, res, next) => {
 /*
  * 4.14* blogilistan laajennus, step2
  * - Toteuta sovellukseen mahdollisuus yksittäisen blogin muokkaamiseen.
+ * 
+ * Blogin omistaja voi mukata mitä tahansa kenttää.
+ * Kuka tahansa voi tykätä.
+ * - jos joku "muu" yrittää muokata blogia, niin mikäli kyseessä on tilanne
+ *   jossa pyynnön esittävän objektin likes arvo on suurempi kuin kannassa
+ *   oleva tilanne, niin sallitaan päivitys tältä osin.
  */
 blogsRouter.put('/:id', async (req, res, next) => {
 
@@ -194,12 +207,30 @@ blogsRouter.put('/:id', async (req, res, next) => {
 
         // Tarkistetaan poistettavaksi haluttavan blogin omistaja
         const blogToBeUpdated = await Blog.findById(req.params.id);
+
         const ownerId = blogToBeUpdated.user.toString();
+
+        /*
+         * Blogin omistaja voi päivittää mitä tahansa.
+         * - kuka tahansa voi tykätä
+         */
+        const currentLikeCount = blogToBeUpdated.likes
+        const newLikeCount = typeof body.likes !== 'undefined' ? body.likes: -1 
+        const increaseLikeCount = newLikeCount > currentLikeCount ? true : false
 
         // Voiko pyynnön esittäjä muokata dokumenttia
         const aut = checkAuthentication(req, ownerId);
 
-        if(aut.validUser === false) {
+        /*
+         * Mikäli pyynnön esittäjä ei ole dokumentin omistaja eikä
+         * kyseessä ole tykkääminen, on kyseessä kielletty operaatio
+         */
+        if(aut.validUser === false && increaseLikeCount === false) {
+
+            console.log("Täällä sitä mennään...")
+            console.log("X", increaseLikeCount, newLikeCount)
+            console.log(".......................")
+            //updateLikeCount(req)
 
             return res.status(aut.errorCode).json({
                 error: aut.msg
@@ -207,21 +238,33 @@ blogsRouter.put('/:id', async (req, res, next) => {
 
         }
 
+        const newTitle = aut.validUser ? body.title : blogToBeUpdated.title
+        const newAuthor = aut.validUser ? body.author : blogToBeUpdated.author
+        const newUrl = aut.validUser ? body.url : blogToBeUpdated.url
+        const newLikes = aut.validUser ? body.likes : (blogToBeUpdated.likes + 1)
+
         /*
          * Huomaa, että metodin findByIdAndUpdate parametrina tulee antaa normaali JavaScript-olio
          */
         const blog = {
-            title: body.title,
-            author: body.author,
-            url: body.url,
-            likes: body.likes
+            title: newTitle,
+            author: newAuthor,
+            url: newUrl,
+            likes: newLikes
         };
 
         /*
          *
          */
         const updatedBlog = await Blog.findByIdAndUpdate(req.params.id, blog, {new: true});
-        res.status(200).json(updatedBlog);
+
+        /* Palautetaa luotu blogi käyttäjätiedoilla terästettynä */
+        const finalBlog = await Blog
+            .findById(req.params.id)
+            .populate('user')
+
+        //res.status(200).json(updatedBlog);
+        res.status(200).json(finalBlog);
 
     } catch (exeption) {
         next(exeption);

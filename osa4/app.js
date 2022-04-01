@@ -49,6 +49,8 @@ app.use(cors());
 
 app.use(express.json());
 
+app.use(middleWare.requestLogger)
+
 /*
  * - autentikoinnissa käytetyn tokenin käsittely
  */
@@ -72,6 +74,14 @@ app.use('/api/users', usersRouter);
  * - kiinnitetään loginRouter polkuun /api/login
  */
 app.use('/api/login', loginRouter);
+
+/*
+ * E2E-testejä varten avattava reitti testitietokannan tyhjentämiseen
+ */
+if(process.env.NODE_ENV === 'test') {
+    const testingRouter = require('./controllers/tests');
+    app.use('/api/testing', testingRouter)
+}
 
 /*
  * - validointivirheiden käsittely
