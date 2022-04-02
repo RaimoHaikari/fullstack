@@ -51,13 +51,13 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
    */
   const longSheet = () => {
     return (
-      <div style={dStyle}>
+      <div className="blogAppBlogData" style={dStyle}>
 
         <TextAndButton
           btlLabel = {isExpanded ? 'hide' : 'view'}
           btnHandler = {() => setExpanded(!isExpanded)}
         >
-          <span style={titleSpanStyle} className="blogAppBlogTitle">{`${blog.title} [${blog.author}]`}</span>
+          <span style={titleSpanStyle} className="blogAppBlogTitle">{`${blog.title} [by: ${blog.author}]`}</span>
         </TextAndButton>
 
         <p style={pStyle}>{blog.url}</p>
@@ -65,8 +65,9 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
         <TextAndButton
           btlLabel = "like"
           btnHandler = {likeButtonHandler}
+          id={`like_btn_${blog.id}`}
         >
-          <span>{`likes ${blog.likes}`}</span>
+          <span className='blogAppBlogLikeCount'>{`likes ${blog.likes}`}</span>
         </TextAndButton>
 
         <p style={pStyle}>{`was added by: ${blog.user.name}`}</p>
@@ -77,6 +78,7 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
             <TextAndButton
               btlLabel = "remove"
               btnHandler = {() => removeBtnHandler(blog)}
+              id={`remove_btn_${blog.id}`}
             />
             : null
         }
@@ -87,7 +89,7 @@ const Blog = ({ blog, likeBtnHandler, removeBtnHandler }) => {
 
   const shortSheet = () => {
     return (
-      <div style={dStyle}>
+      <div className="blogAppBlogData" style={dStyle}>
         <TextAndButton
           btlLabel = {isExpanded ? 'hide' : 'view'}
           btnHandler = {() => setExpanded(!isExpanded)}

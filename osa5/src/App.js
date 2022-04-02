@@ -38,6 +38,17 @@ const App = () => {
   const LOCAL_STORAGE_ITEM_NAME = 'loggedBlogsAppUser'
   const MESSAGE_VISIBLE_TIME = 2000
 
+  const blogListSorter = (a, b) => {
+
+    if(a.likes > b.likes)
+      return -1
+
+    if(a.likes < b.likes)
+      return 1
+
+    return 0
+  }
+
   /*
    * 5.9: blogilistan frontend, step9
    * - Järjestä sovellus näyttämään blogit likejen mukaisessa suuruusjärjestyksessä.
@@ -52,17 +63,7 @@ const App = () => {
             expanded: false
           }
         })
-        .sort((a,b) => {
-
-          if(a.likes > b.likes)
-            return -1
-
-          if(a.likes < b.likes)
-            return 1
-
-          return 0
-
-        })
+        .sort(blogListSorter)
 
       setBlogs(blogs)
     })
@@ -238,7 +239,7 @@ const App = () => {
           return updatedBlog
 
         return blog
-      })
+      }).sort(blogListSorter)
 
       displayMessage(true, 'Tykkään, tykkään, tykkään....')
       setBlogs(updatedBlogs)

@@ -14,6 +14,7 @@ const TextAndButton = (props) => {
     <div className='textAndButton'>
       {props.children}
       <button
+        id={typeof props.id === 'undefined' ? null : props.id}
         onClick={btnHandler}
         style={ typeof props.children !== 'undefined' ? { marginLeft: '10px' } : null}
       >{btlLabel}</button>
