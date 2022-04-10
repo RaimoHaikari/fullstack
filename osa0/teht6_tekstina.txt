@@ -1,0 +1,32 @@
+Fullstack 2022. 0.6: Uusi muistiinpano
+
+note over selain:
+Sovelluksen alustamisen aikana, lomakkeeseen liitetään tapahtumakäsittelijä
+Kun käyttäjä sitten kirjoittaa viestin ja painaa new note -painiketta.
+
+Tapahtumankäsittelijä:
+- keskeyttää lomakkeen normaalin käsittelyn
+- muodostaa viestin perusteella objektin
+- lisää objektin selaimella näytettävään viestien listaan
+- kutsuu listan näytölle tulostavaa redrawNotes -funktiota
+- kutsuu viestin palvelimelle välittävää funktiota sendToServer
+
+redrawNotes
+- pyyhkii vanhan viestilistan pois ja kirjoittaa uudella viestillä
+vahvistetun listan näkyville
+
+sendToServer
+- alustaa AJAX -objektin, joka lähettää viestin palvelimelle.
+
+end note
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note_spa
+palvelin-->selain: JSON- objekti
+
+note over selain:
+Mikäli selain ilmoittaa viestin lisäyksen onnistuneen,
+tulostetaan konsoliin palvelimen lähettämä viesti
+end note
+
+
+

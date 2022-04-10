@@ -1,0 +1,34 @@
+Fullstack 2022. 0.5: Single Page App
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa
+palvelin-->selain: HTML-koodia
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+palvelin-->selain: main.css
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/spa.js
+palvelin-->selain: spa.js
+
+note over selain:
+Selain alkaa suorittamaan spa.js:n koodia. 
+- alustetaan ja käynnistetään AJAX -komento, joka
+  hakee palvelimelta käyttäjien viestit
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+palvelin-->selain: data.json
+
+note over selain:
+Selain kutsuu suoritettuun em. AJAX -pyyntöön liitettyä callback-funktiota
+- funktio tarkistaa, että aineiston haku onnistui
+- ohjelman suoritusta jatkaa 'uudelleen käytettävä' redrawNotes-funktio, 
+  joka tyhjentää mahdolliset vanhat viestit ja palvelimelta saadun aineiston
+  perustella rakentaa HTML-listan joka lopuksi kiinnitetään selaimen
+  esittämään dokumenttiin nähtäville 
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/favicon.ico
+palvelin-->selain: favicon.ico
+
+
+

@@ -1,0 +1,51 @@
+Fullstack 2022. Tehtävä: 0.4 uusi muistiinpano
+
+selain->palvelin: HTTP POST https://studies.cs.helsinki.fi/exampleapp/new_note
+palvelin-->selain: kehoittaa selainta tekemään HTTP GET pyynnön osoitteeseen /exampleapp/notes
+
+note over selain:
+eli päivitettyyn aineistoon päästään käsiksi lukemalla sivu uudelleen
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/notes
+palvelin-->selain: HTML-koodia
+
+note over selain:
+selain rakentaa saamansa HTML-koodin mukaisen sivun
+pyytäen palvelimelta tehtävän suorittamisen edellyttämiä resursseja
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.css
+palvelin-->selain: main.css
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/main.js
+palvelin-->selain: main.js
+
+note over selain:
+Selain alkaa suorittamaan main.js:n koodia. 
+Koodissa alustetaan AJAX -yhteyden toteuttava objekti, 
+jonka kautta viestit haetaan palevimelta
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/exampleapp/data.json
+palvelin-->selain: data.json
+
+note over selain:
+Saatuaan palvelimelta vastauksen, selain kutsuu edellisessä 
+vaihessa määritellyn AJAX -yhteysobjektin sisältämää callback-funktiota, 
+joka käsittelee selaimen lähettämän vastauksen.
+
+Tällä kertaa käsittely etenee siten, että:
+
+- JSON-objekti sisältää käyttäjien lähettämät viestit kokoavan taulukon. 
+- Koodi alustaa HMTL -listan.
+- viestit lisätään silmukkaa käyttäen em. listaan
+- lista asetetaan loppukäyttäjän nähtäville
+
+end note
+
+selain->palvelin: HTTP GET https://studies.cs.helsinki.fi/favicon.ico
+palvelin-->selain: favicon.ico
+
+
+
