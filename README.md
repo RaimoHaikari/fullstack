@@ -2,4 +2,4 @@
 #### Raimo Haikari
 
 Palautussovellukseen ilmoitettuna:
-- [Osa 0](./osa0/README.md)
+- [Osa 0](./osa0)
