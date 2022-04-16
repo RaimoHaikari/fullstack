@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
-import {voteAnecdote} from '../reducers/anecdoteReducer';
+//import {voteAnecdote} from '../reducers/anecdoteReducer';
 
 /*
  * 6.5: anekdootit, step3
@@ -7,6 +7,7 @@ import {voteAnecdote} from '../reducers/anecdoteReducer';
  */
 const anecdoteListSorter = (a, b) => {
 
+  
     if(a.votes > b.votes)
       return -1
 
@@ -30,23 +31,50 @@ const Anecdote = ({content, clickHandler,  id, votes}) => {
     )
 }
 
+/*
+ * TypeError: Cannot assign to read only property '0' of object '[object Array]' in typescript
+ * - https://stackoverflow.com/questions/64957735/typeerror-cannot-assign-to-read-only-property-0-of-object-object-array-in
+ */
 const Anecdotes = () => {
     
     const dispatch = useDispatch();
 
     const anecdotes = useSelector(state => {
 
-        const sortedState = state.sort(anecdoteListSorter);
+        const filterSrt = state.filter.filterStr;
 
-        return sortedState;
+        let items = [...state.anecdotes]
+
+        if(filterSrt !== null)
+            items = items.filter(item => item.content.includes(filterSrt))
+        
+
+
+        return items.sort(anecdoteListSorter);
     });
 
+    /*
+     * dispatch({ type: 'anecdotes/voteAnecdote', payload: anecdote.id })
+     */
+    const voteHandler = (anecdote) => {
+
+        dispatch({ type: 'anecdotes/voteAnecdote', payload: anecdote.id })
+        dispatch({ type: 'notification/displayNotification', payload: `You voted: ${anecdote.content}` });
+
+        setTimeout(() => {
+            dispatch({ type: 'notification/clearNotification', payload: null })
+        }, 5000);
+    }
+
+    /*
+     * clickHandler = {() => dispatch({ type: 'anecdotes/voteAnecdote', payload: anecdote.id })}
+     */
     return (
         <div>
             {anecdotes.map(anecdote => 
                 <Anecdote 
                     key={anecdote.id}
-                    clickHandler = {() => dispatch(voteAnecdote(anecdote.id))}
+                    clickHandler = {() => voteHandler(anecdote)}
                     content={anecdote.content}
                     votes={anecdote.votes}
                 />
