@@ -1,4 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit"
+import { createSlice } from "@reduxjs/toolkit";
+import anecdoteService from '../services/anecdotes';
 
 const anecdotesAtStart = [
   'If it hurts, do it more often',
@@ -19,7 +20,8 @@ const asObject = (anecdote) => {
   }
 }
 
-const initialState = anecdotesAtStart.map(asObject)
+// const initialState = anecdotesAtStart.map(asObject)
+const initialState = []
 
 /*
  * A C T I O N   C R E A T O R S
@@ -91,11 +93,19 @@ const anecdoteSlice = createSlice({
   reducers: {
     createAnecdote(state, action){
       const content = action.payload;
-      state.push({
-        content,
-        votes: 0,
-        id: getId()
-      })
+      state.push(content)
+    },
+    setAnecdotes(state, action){
+      return action.payload
+    },
+    updateAnecdote(state, action){
+
+      const id = action.payload.id;
+      const updatedAnecdote = action.payload.updatedAnecdote;
+
+      return state.map(anecdote => 
+        anecdote.id === id ? updatedAnecdote : anecdote
+      )
     },
     voteAnecdote(state, action){
 
@@ -114,17 +124,55 @@ const anecdoteSlice = createSlice({
   }
 });
 
+
+export const {createAnecdote, setAnecdotes, updateAnecdote} = anecdoteSlice.actions;
+
 /*
+ * 6.15 anekdootit ja backend, step3
+ * - Muuta Redux-storen alustus tapahtumaan Redux Thunk -kirjaston avulla toteutettuun asynkroniseen actioniin.
+ */
+export const initializeAnecdotes = () => {
+  return async dispatch => {
+    const anecdotes = await anecdoteService.getAll();
+    dispatch(setAnecdotes(anecdotes));
+  }
+}
 
-    createAnecdote(state, action) {
-      const content = action.payload,
-      state.push({
-        content,
-        important: false,
-        id: generateId()
-      })
-    }
-*/
+/*
+ * 6.16 anekdootit ja backend, step4
+ * - Muuta myös uuden anekdootin luominen tapahtumaan Redux Thunk -kirjaston avulla toteutettuihin asynkronisiin actioneih
+ */
+export const saveAnecdote = newAnecdote => {
 
-export const {createAnecdote, voteAnecdote} = anecdoteSlice.actions;
+  return async dispatch => {
+    const addedAnecdote = await anecdoteService.createNew(newAnecdote);
+    dispatch(createAnecdote({
+      ...addedAnecdote
+    }))
+  }
+
+}
+
+/*
+ * 6.17 anekdootit ja backend, step5
+ * -Äänestäminen ei vielä talleta muutoksia backendiin. Korjaa tilanne Redux Thunk -kirjastoa hyödyntäen.
+ */
+export const update = (updatedAnecdote) => {
+
+  return async dispatch => {
+
+    const id = updatedAnecdote.id;
+
+    const savedAnecdote = await anecdoteService.update(id, updatedAnecdote);
+
+    dispatch(updateAnecdote({
+      id,
+      updatedAnecdote: {...savedAnecdote}
+    }))
+
+  }
+
+}
+
+
 export default anecdoteSlice.reducer;

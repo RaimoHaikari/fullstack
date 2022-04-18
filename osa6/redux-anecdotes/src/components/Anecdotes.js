@@ -1,5 +1,9 @@
+import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-//import {voteAnecdote} from '../reducers/anecdoteReducer';
+
+import {initializeAnecdotes, update} from '../reducers/anecdoteReducer';
+import {setNotification} from '../reducers/notificationReducer';
+
 
 /*
  * 6.5: anekdootit, step3
@@ -39,6 +43,12 @@ const Anecdotes = () => {
     
     const dispatch = useDispatch();
 
+    useEffect(() => {
+
+        dispatch(initializeAnecdotes())
+
+    }, [dispatch])
+
     const anecdotes = useSelector(state => {
 
         const filterSrt = state.filter.filterStr;
@@ -56,14 +66,13 @@ const Anecdotes = () => {
     /*
      * dispatch({ type: 'anecdotes/voteAnecdote', payload: anecdote.id })
      */
-    const voteHandler = (anecdote) => {
+    const voteHandler = async (anecdote) => {
 
-        dispatch({ type: 'anecdotes/voteAnecdote', payload: anecdote.id })
-        dispatch({ type: 'notification/displayNotification', payload: `You voted: ${anecdote.content}` });
+        dispatch(update({...anecdote,votes: anecdote.votes + 1}))
 
-        setTimeout(() => {
-            dispatch({ type: 'notification/clearNotification', payload: null })
-        }, 5000);
+        // Tiedoitusasiat
+        dispatch(setNotification(`You voted: ${anecdote.content}`, 2));
+
     }
 
     /*

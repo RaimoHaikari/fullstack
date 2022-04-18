@@ -1,24 +1,26 @@
 import { useDispatch } from 'react-redux';
 
+import {saveAnecdote} from '../reducers/anecdoteReducer';
+
+import {setNotification} from '../reducers/notificationReducer'
+
 
 const AnecdoteForm = () => {
 
     const dispatch = useDispatch();
 
-    const addAnecdote = (event) => {
+    const addAnecdote = async (event) => {
 
         event.preventDefault()
     
         const content = event.target.anecdote.value
         event.target.anecdote.value = '';
 
-        dispatch({ type: 'anecdotes/createAnecdote', payload: content });
+        // Uuden lisäys
+        dispatch(saveAnecdote(content))
 
-        dispatch({ type: 'notification/displayNotification', payload: `New anecdote: ${content}` });
-
-        setTimeout(() => {
-            dispatch({ type: 'notification/clearNotification', payload: null })
-        }, 5000);
+        // Tiedoitusasiat
+        dispatch(setNotification(`New anecdote: ${content}`, 2));
     
     }
 
