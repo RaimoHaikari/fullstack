@@ -71,7 +71,7 @@ const Anecdotes = () => {
         dispatch(update({...anecdote,votes: anecdote.votes + 1}))
 
         // Tiedoitusasiat
-        dispatch(setNotification(`You voted: ${anecdote.content}`, 2));
+        dispatch(setNotification(`You voted: ${anecdote.content}`, 5));
 
     }
 
