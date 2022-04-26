@@ -1,7 +1,7 @@
 import Anecdotes from './components/Anecdotes';
-import AnecdoteForm from './components/AnecdoteForm';
-import Notification from './components/Notification';
-import Filter from './components/Filter';
+import ConnectedAnecdoteForm from './components/ConnectedAnecdoteForm';
+import ConnectedNotification from './components/ConnectedNotification'
+import ConnectedFilter from './components/ConnectedFilter';
 
 const App = () => {
 
@@ -10,12 +10,12 @@ const App = () => {
    */
   return (
     <div>
-      <Notification />
+      <ConnectedNotification />
       <h2>Anecdotes</h2>
-      <Filter />
+      <ConnectedFilter />
       <Anecdotes />
       <h2>Create New</h2>
-      <AnecdoteForm />
+      <ConnectedAnecdoteForm />
     </div>
   )
 }

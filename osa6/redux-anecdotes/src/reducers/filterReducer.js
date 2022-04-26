@@ -12,8 +12,6 @@ const filterSlice = createSlice({
         setFilter(state, action){
             const str = action.payload;
 
-            console.log("in sss", str)
-
             const newState = {
                 ...state,
                 filterStr: str
