@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 
 const Blog = require('../models/blog');
 const User = require('../models/user');
+const Comment = require('../models/comment');
 
 
 /*
@@ -86,10 +87,38 @@ blogsRouter.get('/', async (req, res) => {
 
     const blogs =  await Blog
         .find({})
-        .populate('user');
+        .populate('user')
+        .populate('comments', 'content');
         
     res.json(blogs)
 });
+
+
+/*
+ * Haetaan id-tunnusta vastaava blogitietue
+ */
+blogsRouter.get('/:id', async (req, res, next) => {
+
+    try {
+        const blog = await Blog
+            .findById(req.params.id)
+            .populate('user')
+            .populate('comments', 'content');
+
+        /*
+         * Löytyikö id:tä vastaava tietue
+         */
+        if(blog)
+            res.json(blog)
+        else
+            res.status(404).end();
+
+    } catch(e) {
+        next(e)
+    } 
+    
+})
+
 
 /*
  * 4.10: blogilistan testit, step3
@@ -150,6 +179,51 @@ blogsRouter.post('/', async (req, res, next) => {
     }
 
 });
+
+
+/*
+ * Uuden kommentin tallennus kantaan
+ */
+blogsRouter.post('/:id/comments', async (req, res, next) => {
+
+    try {
+
+        const body = req.body;
+
+        // Haetaan kommentoitava blogi
+        const blogToBeCommented = await Blog.findById(req.params.id);
+console.log(blogToBeCommented)
+
+        // Luodaan ja talletetaan kommentti
+        const comment = new Comment({
+            content: body.content,
+            blog: blogToBeCommented._id
+        });
+
+        const savedComment = await comment.save();
+console.log(savedComment)
+
+        // Liitetään blogitietueeseen tieto lisätystä kommentista
+        blogToBeCommented.comments = blogToBeCommented.comments.concat(savedComment._id);
+        await blogToBeCommented.save()
+
+        /*
+         * luetaan juuri lisätty merkintä, jotta saadaan käyttäjätiedot
+         * mukaan
+         */
+        const updatedBlog = await Blog
+            .findById(req.params.id)
+            .populate('comments', 'content')
+            .populate('user');
+
+        res.status(201).json(updatedBlog);
+
+    } catch (e) {
+        next(e)
+    }
+
+})
+
 
 /*
  * 4.13 blogilistan laajennus, step1
