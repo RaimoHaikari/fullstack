@@ -7,10 +7,16 @@ import {
   Route
 } from 'react-router-dom'
 
+import Home from './pages/Home'
+import BloglistPage from './pages/BloglistPage'
+import SelectedBlogPage from './pages/SelectedBlogPage'
+import UserlistPage from './pages/UserlistPage'
+import SelectedUserPage from './pages/SelectedUserPage'
+
+
 import LoginForm from './components/LoginForm'
 import UserData from './components/UserData'
 import Notification from './components/Notification'
-import UserList from './components/UserList'
 
 import blogService from './services/blogs'
 
@@ -18,9 +24,6 @@ import { setUser } from './reducers/userReducer'
 import { setNotification } from './reducers/notificationReducer'
 import { fetchBlogs } from './reducers/blogsReducer'
 import { fetchUserlist } from './reducers/userlistReducer'
-import BlogList from './components/BlogList'
-import SelectedBlog from './components/SelectedBlog'
-import SelectedUser from './components/SelectedUser'
 
 const App = () => {
 
@@ -90,21 +93,6 @@ const App = () => {
     )
   }
 
-  /*
-   * "LandingPagen" layout
-   */
-  const appDefault = () => {
-    return (
-      <React.Fragment>
-        {
-          loggedUser === true
-            ? <p>Tervetuloa blogien kiehtovaan maailmaan</p>
-            : null
-        }
-      </React.Fragment>
-    )
-  }
-
 
 
   return (
@@ -123,11 +111,11 @@ const App = () => {
       }
 
       <Routes>
-        <Route path="/users" element={<UserList />} />
-        <Route path="/users/:id" element={<SelectedUser />} />
-        <Route path="/blogs/:id" element={<SelectedBlog />} />
-        <Route path="/blogs" element={<BlogList />} />
-        <Route path="/" element={appDefault()} />
+        <Route path="/users/:id" element={<SelectedUserPage />} />
+        <Route path="/users" element={<UserlistPage />} />
+        <Route path="/blogs/:id" element={<SelectedBlogPage />} />
+        <Route path="/blogs" element={<BloglistPage />} />
+        <Route path="/" element={<Home />} />
       </Routes>
     </div>
   )

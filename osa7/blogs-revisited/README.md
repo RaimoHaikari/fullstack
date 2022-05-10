@@ -15,7 +15,7 @@
   </tr>
   <tr>
     <td>7.9</td>
-    <td>skipattu ainakin toistaiseksi</td>
+    <td>skipattu</td>
     <td></td>
   </tr>
   <tr>
@@ -40,7 +40,42 @@
   </tr>
   <tr>
     <td>7.14</td>
-    <td>aloitettu</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.15</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.16</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.17</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.18</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.19</td>
+    <td>valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>7.20</td>
+    <td>valmis</td>
+    <td>Ei nyt niin erityisen tyylikäs, mutta styled components:ia opeteltu.</td>
+  </tr>
+  <tr>
+    <td>7.21</td>
+    <td>valmis</td>
     <td></td>
   </tr>
 </table>

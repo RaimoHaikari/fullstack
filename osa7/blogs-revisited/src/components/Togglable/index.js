@@ -1,6 +1,6 @@
 /* eslint-disable linebreak-style */
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
-
+import { TogglableButton } from './togglableStyles'
 /*
  * - pari forwarRef & ref mahdollistavat komponentin sisältämien funktioiden
  *   käyttämisen komponentin ulkopuolelta
@@ -34,12 +34,12 @@ const Togglable = forwardRef((props, ref) => {
     }}>
 
       <div style={hideWhenVisible}>
-        <button onClick={toggleVisibility}>{props.buttonLabel}</button>
+        <TogglableButton onClick={toggleVisibility}>{props.buttonLabel}</TogglableButton>
       </div>
 
       <div style={showWhenVisible}>
         {props.children}
-        <button onClick={toggleVisibility}>Cancel</button>
+        <TogglableButton onClick={toggleVisibility}>Cancel</TogglableButton>
       </div>
 
     </div>

@@ -1,26 +1,18 @@
 /* eslint-disable linebreak-style */
 import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, Navigate } from 'react-router-dom'
+//import { Link } from 'react-router-dom'
 
-import { setNotification } from '../reducers/notificationReducer'
-import { createNewBlog } from '../reducers/blogsReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+import { createNewBlog } from '../../reducers/blogsReducer'
 
-import Togglable from './Togglable'
-import NewBlog from './NewBlog'
+import { Container, Heading } from '../../globalStyles'
+import { UL, LI, StyledLink } from './blogListStyles'
+
+import Togglable from '../Togglable'
+import NewBlog from '../NewBlog'
 
 const BlogList = () => {
-
-  const ulStyle = {
-    listStyleType: 'none',
-    padding: '0',
-    marginTop: '10px'
-  }
-
-  const listItemStyle = {
-    padding: '5px',
-    borderBottom: '1px dotted gray'
-  }
 
   /*
     * - ref menkanismin avulla saadaan yhteys toisen komponentin sisällä
@@ -31,14 +23,12 @@ const BlogList = () => {
 
   const dispatch = useDispatch()
 
-  const { blogs, loggedUser } = useSelector(state => {
+  const { blogs } = useSelector(state => {
 
     const _blogs = state.blogs
-    const _loggedUser = state.user.username !== null ? true : false
 
     return {
-      blogs: _blogs,
-      loggedUser: _loggedUser
+      blogs: _blogs
     }
   })
 
@@ -63,17 +53,17 @@ const BlogList = () => {
   const getBlogs = () => {
 
     return (
-      <ul style={ulStyle}>
+      <UL>
         {
           blogs.map(blog => {
             return (
-              <li style={listItemStyle} key={blog.id}>
-                <Link to={`/blogs/${blog.id}`}>{blog.title}</Link>
-              </li>
+              <LI key={blog.id}>
+                <StyledLink to={`/blogs/${blog.id}`}>{blog.title}</StyledLink>
+              </LI>
             )
           })
         }
-      </ul>
+      </UL>
     )
   }
 
@@ -115,7 +105,7 @@ const BlogList = () => {
       <>
         {
           blogs.length > 0
-            ? <h3>Sovellukseen on lisätty seuravat blogit</h3>
+            ? <Heading>Sovellukseen on lisätty seuravat ihanat blogit</Heading>
             : <p>Ei lisättyjä blogeja</p>
         }
         { getBlogs() }
@@ -126,13 +116,11 @@ const BlogList = () => {
 
 
   return (
-    <>
+    <Container>
       {
-        loggedUser
-          ? loggedUserScreen()
-          : <Navigate replace to="/" />
+        loggedUserScreen()
       }
-    </>
+    </Container>
   )
 }
 

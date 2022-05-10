@@ -1,6 +1,12 @@
 /* eslint-disable linebreak-style */
 import React, { useState, useImperativeHandle, forwardRef } from 'react'
 
+import {
+  FormContainer,
+  Input,
+  Submit
+} from './newBlogStyle'
+
 const NewBlog = forwardRef(({ createBlog }, ref) => {
 
   /*
@@ -39,15 +45,18 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
   }
 
   return (
-    <form onSubmit={addBlog}>
-      <h3 style={{
-        marginBottom: '10px',
-        marginTop: '10px'
-      }}>Create new</h3>
+    <FormContainer>
 
-      <div style={{ marginBottom: '10px' }}>
-                title:
-        <input
+
+      <form onSubmit={addBlog}>
+        <h3 style={{
+          marginBottom: '10px',
+          marginTop: '10px'
+        }}>Create new</h3>
+
+
+        <label htmlFor="blogAppNewBlogTitle">title</label>
+        <Input
           id='blogAppNewBlogTitle'
           type="text"
           value={title}
@@ -56,11 +65,9 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           placeholder='title of the blog'
         />
 
-      </div>
 
-      <div style={{ marginBottom: '10px' }}>
-                author:
-        <input
+        <label htmlFor="blogAppNewBlogAuthor">author</label>
+        <Input
           id='blogAppNewBlogAuthor'
           type="text"
           value={author}
@@ -68,11 +75,11 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           onChange={({ target }) => setAuthor(target.value)}
           placeholder='author of the blog'
         />
-      </div>
 
-      <div style={{ marginBottom: '10px' }}>
-        url:
-        <input
+
+
+        <label htmlFor="blogAppNewBlogUrl">url</label>
+        <Input
           id='blogAppNewBlogUrl'
           type="text"
           value={url}
@@ -80,15 +87,15 @@ const NewBlog = forwardRef(({ createBlog }, ref) => {
           onChange={({ target }) => setUrl(target.value)}
           placeholder='url of the blog'
         />
-      </div>
 
-      <div style={{ marginBottom: '10px' }}>
-        <button
-          id='blogAppNewBlogCreate'
-          type='submit'>Create</button>
-      </div>
 
-    </form>
+        <div style={{ marginBottom: '10px' }}>
+          <Submit type="submit" value="Submit"></Submit>
+
+        </div>
+
+      </form>
+    </FormContainer>
   )
 })
 

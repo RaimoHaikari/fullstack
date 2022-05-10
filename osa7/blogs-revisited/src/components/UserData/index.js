@@ -1,12 +1,14 @@
 /* eslint-disable linebreak-style */
 import { useDispatch, useSelector } from 'react-redux'
-import { Link } from 'react-router-dom'
 
-import { clearUser } from '../reducers/userReducer'
-import { setNotification } from '../reducers/notificationReducer'
+import { clearUser } from '../../reducers/userReducer'
+import { setNotification } from '../../reducers/notificationReducer'
+
+import { StyledLink, UnicornButton,  UnicornSystemsLinkBar } from './userDataStyles'
 
 const UserData = ({ localStorageItemName }) => {
 
+  /*
   const divStyle = {
     marginTop: 10,
     borderBottom: '1px solid navy'
@@ -16,6 +18,7 @@ const UserData = ({ localStorageItemName }) => {
     padding: 3,
     textDecoration: 'none'
   }
+  */
 
   const dispatch = useDispatch()
 
@@ -36,22 +39,22 @@ const UserData = ({ localStorageItemName }) => {
   }
 
   return (
-    <div style={divStyle}>
+    <UnicornSystemsLinkBar>
 
-      <Link style={linkPadding} to="/">Home</Link>
-      <Link style={linkPadding} to="/blogs">Blogs</Link>
-      <Link style={linkPadding} to="/users">Users</Link>
+      <StyledLink to="/">Home</StyledLink>
+      <StyledLink to="/blogs">Blogs</StyledLink>
+      <StyledLink to="/users">Users</StyledLink>
 
       <span style={{ marginLeft: '20px' }}>
         {name} logged in
-        <button
+        <UnicornButton
           onClick={handleLogout}
           style={{ marginLeft: '10px', marginBottom: '5px' }}
         >
         Logout
-        </button>
+        </UnicornButton>
       </span>
-    </div>
+    </UnicornSystemsLinkBar>
   )
 }
 

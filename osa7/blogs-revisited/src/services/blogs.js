@@ -4,6 +4,12 @@ const baseUrl = '/api/blogs'
 
 let token = null
 
+const addComment = async (id, comment) => {
+
+  const response = await axios.post(`${baseUrl}/${id}/comments`, { 'content': comment })
+  return response.data
+}
+
 /*
  * 5.3: blogilistan frontend, step3
  * - Laajenna sovellusta siten, että kirjautunut käyttäjä voi luoda uusia blogeja:
@@ -58,6 +64,7 @@ const update = async modifiedBlog => {
 }
 
 export default {
+  addComment,
   create,
   deleteBlog,
   getAll,
