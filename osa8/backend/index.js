@@ -194,6 +194,9 @@ const resolvers = {
       const newBook = { ...args, id: uuid()}
       books = books.concat(newBook)
 
+      console.log("in Mutation: addBook")
+      console.log({...args})
+
       // Päivitetään tarvittaessa kirjailijaluetteloa
       if(authorBookAcount.length === 0){
         authors = authors.concat({
