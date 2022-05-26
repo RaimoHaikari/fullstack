@@ -1,94 +1,57 @@
-const { ApolloServer, gql } = require('apollo-server')
-const { v1: uuid } = require('uuid')
+require('dotenv').config()
 
-let authors = [
-  {
-    name: 'Robert Martin',
-    id: "afa51ab0-344d-11e9-a414-719c6709cf3e",
-    born: 1952,
-  },
-  {
-    name: 'Martin Fowler',
-    id: "afa5b6f0-344d-11e9-a414-719c6709cf3e",
-    born: 1963
-  },
-  {
-    name: 'Fyodor Dostoevsky',
-    id: "afa5b6f1-344d-11e9-a414-719c6709cf3e",
-    born: 1821
-  },
-  { 
-    name: 'Joshua Kerievsky', // birthyear not known
-    id: "afa5b6f2-344d-11e9-a414-719c6709cf3e",
-  },
-  { 
-    name: 'Sandi Metz', // birthyear not known
-    id: "afa5b6f3-344d-11e9-a414-719c6709cf3e",
-  },
-]
+const { ApolloServer, UserInputError, gql } = require('apollo-server')
+
+const mongoose = require('mongoose')
+
+const Author =  require('./models/author')
+const Book = require('./models/book')
 
 /*
- * Suomi:
- * Saattaisi olla järkevämpää assosioida kirja ja sen tekijä tallettamalla kirjan yhteyteen tekijän nimen sijaan tekijän id
- * Yksinkertaisuuden vuoksi tallennamme kuitenkin kirjan yhteyteen tekijän nimen
- *
- * English:
- * It might make more sense to associate a book with its author by storing the author's id in the context of the book instead of the author's name
- * However, for simplicity, we will store the author's name in connection with the book
-*/
+ * Muodostetaan yhteys tietokantaan
+ */
+const password = process.env.PASSWORD
+const dbName = process.env.DB
 
-let books = [
-  {
-    title: 'Clean Code',
-    published: 2008,
-    author: 'Robert Martin',
-    id: "afa5b6f4-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Agile software development',
-    published: 2002,
-    author: 'Robert Martin',
-    id: "afa5b6f5-344d-11e9-a414-719c6709cf3e",
-    genres: ['agile', 'patterns', 'design']
-  },
-  {
-    title: 'Refactoring, edition 2',
-    published: 2018,
-    author: 'Martin Fowler',
-    id: "afa5de00-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring']
-  },
-  {
-    title: 'Refactoring to patterns',
-    published: 2008,
-    author: 'Joshua Kerievsky',
-    id: "afa5de01-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'patterns']
-  },  
-  {
-    title: 'Practical Object-Oriented Design, An Agile Primer Using Ruby',
-    published: 2012,
-    author: 'Sandi Metz',
-    id: "afa5de02-344d-11e9-a414-719c6709cf3e",
-    genres: ['refactoring', 'design']
-  },
-  {
-    title: 'Crime and punishment',
-    published: 1866,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5de03-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'crime']
-  },
-  {
-    title: 'The Demon ',
-    published: 1872,
-    author: 'Fyodor Dostoevsky',
-    id: "afa5de04-344d-11e9-a414-719c6709cf3e",
-    genres: ['classic', 'revolution']
-  },
-]
+const url = `mongodb+srv://fullstack_2020:${password}@cluster0-dkwjc.mongodb.net/${dbName}?retryWrites=true&w=majority`
 
+console.log("...............................");
+console.log("Yhdistetään: ", url)
+
+/*
+ * Selvitetään kirjojen määrä
+ * - mikäli kirjailijan nimeä ei ole määritetty palautetaan kaikkien talletettujen kirjojen lkm
+ * - mikäli nimi on määritetty, palautetaan ko. kirjailijan kirjojen lkm
+ */
+const getBookCount = async (name) => {
+
+  let books;
+
+  // - mikäli kirjailijaa ei ole määritelty, palautetaan kaikkien kirjojen määrä
+  if(typeof name === 'undefined'){
+    books = await Book.find({});
+    return books.length
+  }
+
+  const author = await Author.findOne({name: name});
+
+  // - mikäli kirjailijan tietoja ei löydy kannasta, palautetaan nolla
+  if(!author) return 0;
+
+  // - palautetaan kirjailijan kirjoittamien kirjojen määrä
+  const authorBooks = await Book.find({author: author._id});
+  return authorBooks.length;
+
+}
+
+mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(res => {
+        console.log("Yhteys muodostettu")
+    })
+    .catch(err => {
+        console.log("Yhteyttä ei saatu muodostettua", err.message)
+    })
+    
 
 /*
  * Skeema
@@ -108,7 +71,7 @@ const typeDefs = gql`
     published: Int!
     author: String!
     id: ID!
-    genres: [String]!
+    genres: [String!]!
   }
  
   type Query {
@@ -134,102 +97,110 @@ const typeDefs = gql`
 
 const resolvers = {
   Query: {
-      allAuthors: () => authors,
-      allBooks: (root, args) => {
+      allAuthors: async (root, args) => {
+        return Author.find({})
+      },
+      allBooks: async (root, args) => {
 
         const genre = args.genre === null ? null : args.genre
+
         const authorName = args.name === null ? null : args.name
+        let authorObj = null;
+        let authorId = null;
 
-        const genreFiltered = books.filter(book => {
+        let queryObj = {}
 
-          if(!genre)
-            return true
-  
-          let x = book.genres.filter(b => b === genre);
-          return x.length > 0;
+        /*
+         * Kirjailijatietojen selvittäminen
+         */
+        if(authorName) 
+          authorObj = await Author.findOne({name: authorName})
 
-        })
+        if(authorObj) 
+          authorId = authorObj._id
 
-        const authorFiltered = books.filter(book => {
+        /*
+         * Viimeistellään hakuobjekti
+         */
+        if(authorId)
+          queryObj['author'] = authorId
 
-          if(!authorName)
-            return true;
-    
-          return book.author === authorName
-        })
+        if(genre)
+          queryObj['genres'] = genre
 
-        const intersection = genreFiltered.filter(book => {
+        let filteredBooks = await Book.find(queryObj)
 
-          let b = authorFiltered.filter(a => a.id === book.id)
-      
-            return b.length > 0
-        })
-
-        return intersection
+        return filteredBooks
 
       },
-      authorCount: () => authors.length,
-      bookCount: (root, args) => {
+      authorCount: async () => {
 
-        if(!args.name){
-            return books.length
-        }
+        const allTheAuthors = await Author.find({})
+        return allTheAuthors.length
 
-        const filtered = books.filter(book => book.author === args.name)
+      },
+      bookCount: async (root, args) => {
 
-        return filtered.length
+        const lkm = await getBookCount(args.name)
+        return lkm
+
       }
   },
   Author: {
-    bookCount: (root) => {
-        const filteredBooks = books.filter(book => book.author === root.name)
-        return filteredBooks.length
+    bookCount: async (root) => {
+
+        const lkm = await getBookCount(root.name)
+        return lkm
+       
     }
   },
   Mutation: {
-    addBook: (root, args) => {
+    addBook: async  (root, args) => {
+
       const authorName = args.author;
-      const authorBookAcount = authors.filter(a => a.name === authorName )
-
-      const newBook = { ...args, id: uuid()}
-      books = books.concat(newBook)
-
-      console.log("in Mutation: addBook")
-      console.log({...args})
-
-      // Päivitetään tarvittaessa kirjailijaluetteloa
-      if(authorBookAcount.length === 0){
-        authors = authors.concat({
-          name: authorName,
-          id: uuid()
-        })
+      let authorId = null;
+    
+      /*
+      * Kirjailijatietojen selvittäminen
+      */
+      authorObj = await Author.findOne({name: authorName})
+    
+      // - luodaan tarvittaessa uusi kirjailija
+      if(!authorObj){
+        let author = new Author({name: authorName})
+        authorObj = await author.save();
       }
+    
+      authorId = authorObj._id
 
-      return newBook
-
-    },
-    editAuthor: (root, args) => {
-
-      const authorData = authors.filter(author => author.name === args.name)
-
-      if(authorData.length !== 1){
-        return null
-      }
-
-      const updatedAuthor = {
-        ...authorData[0],
-        born: args.setBornTo
-      }
-
-      authors = authors.map(a => {
-
-        if(a.name === args.name)
-          return updatedAuthor
-
-        return a
+      /*
+      * Luodaan ja talletetaan uusi kirja
+      */
+      let book = new Book({
+        title: args.title,
+        published: args.published,
+        author: authorId,
+        genres: args.genres
       })
 
-      return updatedAuthor
+      let res = await book.save()
+
+      return res
+
+    },
+    editAuthor: async (root, args) => {
+    
+      const filter = { name: args.name }
+      const update = { born: args.setBornTo }
+    
+      /*
+      * tietojen päivitys
+      */
+      let doc = await Author.findOneAndUpdate(filter, update, {
+        new: true
+      });
+
+      return doc
 
     }
   }
