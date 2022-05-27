@@ -6,6 +6,19 @@ const mongoose = require('mongoose')
 
 const Author = require('./models/author')
 const Book = require('./models/book')
+const User = require('./models/user')
+
+let users = [
+  {
+    username: 'kiekkoniilo',
+    favoriteGenre: 'ylamummo'
+  },
+  {
+    username: 'nokinena',
+    favoriteGenre: 'taikuus'
+  },  
+]
+
 
 let authors = [
   {
@@ -84,6 +97,7 @@ let books = [
 const Task = {
   ALUSTA_KIRJAILIJAT: 'ALUSTA_KIRJAILIJAT',
   ALUSTA_KIRJAT: 'ALUSTA_KIRJAT',
+  ALUSTA_KAYTTAJAT: 'ALUSTA_KAYTTAJAT',
   JOTAIN_AIVAN_MUUTA: 'JOTAIN_AIVAN_MUUTA'
 };
 
@@ -140,6 +154,17 @@ const addBook = async (args) => {
 
   return res;
 
+}
+
+
+/*
+ *
+ */
+const addUser = async (args) => {
+
+  const user = new User({...args})
+  let res = await user.save();
+  return res
 
 }
 
@@ -169,6 +194,19 @@ const addBooks = async () => {
 
 }
 
+const addUsers = async () => {
+
+  await Promise.all(
+    users.map(b => addUser(b))
+  ).then((values) => {
+    console.log(values);
+  });
+
+
+  mongoose.connection.close()
+
+}
+
 /*
 const filter = { name: 'Jean-Luc Picard' };
 const update = { age: 59 };
@@ -178,19 +216,43 @@ let doc = await Character.findOneAndUpdate(filter, update);
 */
 const fooBar = async (args) => {
 
-  const authorName = args.name;
+  const authorName = args.author;
   let authorId = null;
 
-  const filter = { name: args.name }
-  const update = { born: args.setBornTo }
+  authorObj = await Author.findOne({name: authorName})
+
+  // - luodaan tarvittaessa uusi kirjailija
+  if(!authorObj){
+    let author = new Author({name: authorName})
+    authorObj = await author.save();
+  }
+
+  authorId = authorObj._id
 
   /*
-  * tietojen päivitys
+  let book = new Book({
+    title: args.title,
+    published: args.published,
+    author: authorId,
+    genres: args.genres
+  })
   */
-  let doc = await Author.findOneAndUpdate(filter, update, {
-    new: true
-  });
-  console.log(doc)
+
+  // t.save().then(t => t.populate('my-path').execPopulate())
+  //let res = await book.save()
+
+  //console.log(book.save().then(() => book.populate('author').execPopulate()))
+  const t = new Book({
+    title: args.title,
+    published: args.published,
+    author: authorId,
+    genres: args.genres
+  })
+
+
+  let x = await t.save().then(t => t.populate('author'))
+  console.log(x)
+
 
   mongoose.connection.close()
 
@@ -208,12 +270,18 @@ const doSomething =  (task) => {
       case Task.ALUSTA_KIRJAT:
           console.log("- alustetaan KIRJALUETTELO");
           addBooks();
-        break;
+          break;
+      case Task.ALUSTA_KAYTTAJAT:
+          console.log("- alustetaan KÄYTTÄJÄluettelo");
+          addUsers();
+          break;
       case Task.JOTAIN_AIVAN_MUUTA:
         console.log("- tehdään jotain aivan muuta");
         fooBar({
-          name: "Reijo Mäki",
-          setBornTo: 1957
+          "title": "Pimeyden tango",
+          "author": "Reijo Mäki",
+          "published": 1997,
+          "genres": ["crime"]
         });
         break;
       default:
@@ -227,7 +295,7 @@ console.log("Yhdistetään: ", url)
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log("Yhteys muodostettu")
-        doSomething(Task.JOTAIN_AIVAN_MUUTA);
+        doSomething(Task.ALUSTA_KAYTTAJAT);
     })
     .catch(err => {
         console.log("Yhteyttä ei saatu muodostettua", err.message)
