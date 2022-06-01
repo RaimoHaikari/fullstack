@@ -83,6 +83,7 @@
     <td>Tehty</td>
     <td>
       <ul>
+        <li>käyttäjät: nokinena, soppa ja mluukkai</li>
         <li>kaikille kayttajille yhteinen salasana: qwerty</li>
       </ul>
     </td>

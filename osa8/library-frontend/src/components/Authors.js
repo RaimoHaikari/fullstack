@@ -5,17 +5,17 @@ import { ALL_AUTHORS } from "../queries";
 
 import SetAuthorBorn from "./SetAuthorBorn";
 
-const Authors = (props) => {
+const Authors = ({ loggedUser, pollInterval, show }) => {
 
   const result = useQuery(
     ALL_AUTHORS, {
-      pollInterval: 2000
+      pollInterval: pollInterval
     }
   )
 
   const [authorBornInEdit, setAuthorBornInEdit] = useState(null)
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
@@ -58,11 +58,10 @@ const Authors = (props) => {
               <td>{a.born}</td>
               <td>{a.bookCount}</td>
               <td>
-                <button
-                  onClick={() => setAuthorBornInEdit(a.name)}
-                >
-                   set year of birth
-                </button>
+                {
+                  loggedUser && 
+                  <button onClick={() => setAuthorBornInEdit(a.name)}>set year of birth</button>
+                }
               </td>
             </tr>
           ))}

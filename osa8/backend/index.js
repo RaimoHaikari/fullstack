@@ -93,6 +93,7 @@ const typeDefs = gql`
     allBooks(name: String, genre: String): [Book!]!
     authorCount: Int!
     bookCount(name: String): Int!
+    distinctGenres: [String]!
     me: User
   }
 
@@ -167,6 +168,16 @@ const resolvers = {
         const lkm = await getBookCount(args.name)
         return lkm
 
+      },
+      distinctGenres: async () => {
+
+        const books = await Book.find({})
+
+        return books
+          .map(book => book.genres)
+          .flat()
+          .filter((value, index, self) => self.indexOf(value) === index)
+          
       },
       me: (root, args, context) => {
         return context.currentUser

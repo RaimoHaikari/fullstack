@@ -1,6 +1,7 @@
 require('dotenv').config()
 
 const { ApolloServer, gql } = require('apollo-server')
+const { graphql } = require('graphql')
 
 const mongoose = require('mongoose')
 
@@ -207,6 +208,11 @@ const addUsers = async () => {
 
 }
 
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
+
+
 /*
 const filter = { name: 'Jean-Luc Picard' };
 const update = { age: 59 };
@@ -216,42 +222,23 @@ let doc = await Character.findOneAndUpdate(filter, update);
 */
 const fooBar = async (args) => {
 
-  const authorName = args.author;
-  let authorId = null;
+  const books = await Book.find({})
 
-  authorObj = await Author.findOne({name: authorName})
+  const distinctGenres = books
+    .map(book => book.genres)
+    .flat()
+    .filter((value, index, self) => self.indexOf(value) === index)
 
-  // - luodaan tarvittaessa uusi kirjailija
-  if(!authorObj){
-    let author = new Author({name: authorName})
-    authorObj = await author.save();
-  }
-
-  authorId = authorObj._id
-
-  /*
-  let book = new Book({
-    title: args.title,
-    published: args.published,
-    author: authorId,
-    genres: args.genres
-  })
-  */
-
-  // t.save().then(t => t.populate('my-path').execPopulate())
-  //let res = await book.save()
-
-  //console.log(book.save().then(() => book.populate('author').execPopulate()))
-  const t = new Book({
-    title: args.title,
-    published: args.published,
-    author: authorId,
-    genres: args.genres
-  })
+    /*
+  const gArrays = books.map(book => book.genres);
+  const unique = gArrays
+    .flat()
+    .filter(onlyUnique)
+    */
 
 
-  let x = await t.save().then(t => t.populate('author'))
-  console.log(x)
+
+  console.log(distinctGenres)
 
 
   mongoose.connection.close()
@@ -295,7 +282,7 @@ console.log("Yhdistetään: ", url)
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log("Yhteys muodostettu")
-        doSomething(Task.ALUSTA_KAYTTAJAT);
+        doSomething(Task.JOTAIN_AIVAN_MUUTA);
     })
     .catch(err => {
         console.log("Yhteyttä ei saatu muodostettua", err.message)
