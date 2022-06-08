@@ -1,24 +1,58 @@
 import { useState } from 'react';
 import { useMutation } from '@apollo/client';
 
-import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS } from '../queries';
+import { ADD_BOOK, ALL_BOOKS, ALL_AUTHORS, GENRE_FILTERED_BOOKS } from '../queries';
 
-const NewBook = (props) => {
+const NewBook = ({ show }) => {
 
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
-  const [published, setPublished] = useState(null)
+  const [published, setPublished] = useState('')
   const [genre, setGenre] = useState('')
   const [genres, setGenres] = useState([])
 
+  /*
+   * 8.22 Välimuistin ajantasaisuus
+   *
+   * - Jos haet tietyn genren kirjat GraphQL:llä eli teit edellisen tehtävän, 
+   *   varmista jollain tavalla se, että kirjojen näkymä säilyy ajantasaisena. 
+   *   Eli kun lisäät uuden kirjan, päivittyy se kirjalistalle viimeistään siinä 
+   *   vaiheessa kun painat jotain genrevalintanappia. Ilman uuden genrevalinnan 
+   *   tekemistä, ei näkymän ole pakko päivittyä.
+   */
+  const getRefetchQueries = () => {
+
+    let x = genres.map(g => {
+      return ({
+        query: GENRE_FILTERED_BOOKS,
+        variables: {genre: g}
+      })
+    })
+
+    x.push(
+      {
+        query: GENRE_FILTERED_BOOKS,
+        variables: {genre: null}
+      }
+    )
+
+    x.push({ query: ALL_BOOKS })
+    x.push({ query: ALL_AUTHORS})
+
+    return x
+  }
+
+  /*
+   *
+   */
   const [ addBook ] = useMutation(
     ADD_BOOK,
     {
-      refetchQueries: [ { query: ALL_BOOKS }, {query: ALL_AUTHORS}]
+      refetchQueries: getRefetchQueries()
     }
   )
 
-  if (!props.show) {
+  if (!show) {
     return null
   }
 
@@ -35,7 +69,7 @@ const NewBook = (props) => {
     })
 
     setTitle('')
-    setPublished(null)
+    setPublished('')
     setAuthor('')
     setGenres([])
     setGenre('')
@@ -47,31 +81,44 @@ const NewBook = (props) => {
   }
 
   return (
-    <div>
+    <div style={{ marginTop: "20px" }}>
       <form onSubmit={submit}>
-        <div>
-          title
-          <input
-            value={title}
-            onChange={({ target }) => setTitle(target.value)}
-          />
-        </div>
-        <div>
-          author
-          <input
-            value={author}
-            onChange={({ target }) => setAuthor(target.value)}
-          />
-        </div>
-        <div>
-          published
-          <input
-            type="number"
-            value={published}
-            onChange={({ target }) => setPublished(parseInt(target.value))}
-          />
-        </div>
-        <div>
+
+        <table>
+          <tbody>
+            <tr>
+              <td>title</td>
+              <td>
+                <input
+                  value={title}
+                  onChange={({ target }) => setTitle(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>author</td>
+              <td>
+                <input
+                  value={author}
+                  onChange={({ target }) => setAuthor(target.value)}
+                />
+              </td>
+            </tr>
+            <tr>
+              <td>published</td>
+              <td>
+                <input
+                  type="number"
+                  value={published}
+                  onChange={({ target }) => setPublished(parseInt(target.value))}
+                />
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+        <div style={{ marginTop: "10px" }}>
           <input
             value={genre}
             onChange={({ target }) => setGenre(target.value)}
@@ -80,7 +127,9 @@ const NewBook = (props) => {
             add genre
           </button>
         </div>
-        <div>genres: {genres.join(' ')}</div>
+
+        <div  style={{ marginTop: "10px" }}>genres: {genres.join(' ')}</div>
+
         <button type="submit">create book</button>
       </form>
     </div>

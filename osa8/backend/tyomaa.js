@@ -99,6 +99,7 @@ const Task = {
   ALUSTA_KIRJAILIJAT: 'ALUSTA_KIRJAILIJAT',
   ALUSTA_KIRJAT: 'ALUSTA_KIRJAT',
   ALUSTA_KAYTTAJAT: 'ALUSTA_KAYTTAJAT',
+  SUOSITUKSET: 'SUOSITUKSET',
   JOTAIN_AIVAN_MUUTA: 'JOTAIN_AIVAN_MUUTA'
 };
 
@@ -212,6 +213,29 @@ function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 
+const recommendations = async (args) => {
+
+
+  const currentUser = await User.findById(args.id);
+  console.log("fG", currentUser.favoriteGenre)
+  console.log(".....................")
+
+  const books = await Book.find({});
+
+  let filteredBooks = books.filter(book => {
+
+    let gInd = book.genres.indexOf(currentUser.favoriteGenre)
+
+    return gInd !== -1
+  })
+
+  
+
+  console.log(filteredBooks)
+
+  mongoose.connection.close()
+}
+
 
 /*
 const filter = { name: 'Jean-Luc Picard' };
@@ -262,6 +286,13 @@ const doSomething =  (task) => {
           console.log("- alustetaan KÄYTTÄJÄluettelo");
           addUsers();
           break;
+      case Task.SUOSITUKSET:
+        console.log("- haetaan kirjautuneelle käyttäjälle luettelo");
+        recommendations({
+          "id": "6290cd0549a1866a2f28a50d",
+          "username":"nokinena"
+        });
+        break;
       case Task.JOTAIN_AIVAN_MUUTA:
         console.log("- tehdään jotain aivan muuta");
         fooBar({
@@ -282,7 +313,7 @@ console.log("Yhdistetään: ", url)
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
     .then(res => {
         console.log("Yhteys muodostettu")
-        doSomething(Task.JOTAIN_AIVAN_MUUTA);
+        doSomething(Task.SUOSITUKSET);
     })
     .catch(err => {
         console.log("Yhteyttä ei saatu muodostettua", err.message)

@@ -20,6 +20,7 @@ const LoginForm = ({ show, tokenName, setPage, setToken }) => {
      * Efektihookki on tarpeen, jotta sovellus ei joutuisi ikuiseen renderöintilooppiin....
      */
     useEffect(() => {
+        
         if(result.data){
             const token = result.data.login.value;
 
@@ -71,6 +72,8 @@ const LoginForm = ({ show, tokenName, setPage, setToken }) => {
                 <button type='submit'>login</button>
             
             </form>
+
+            <p><small><strong>users: [nokinena, soppa, mluukkai]<br />password: qwerty</strong></small></p>
         </div>
     );
 };

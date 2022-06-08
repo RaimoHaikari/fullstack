@@ -67,10 +67,60 @@ export const ALL_BOOKS = gql`
     }
 `;
 
+/*
+ * ... Tilaukset clientissä
+ */
+export const BOOK_ADDED = gql`
+    subscription {
+        bookAdded {
+            title
+            published
+            author {
+                name
+            }
+            genres
+        }
+    }
+`;
+
+/*
+ *
+ */
+export const GENRE_FILTERED_BOOKS = gql`
+    query Query($genre: String) {
+        allBooks(genre: $genre){
+            title
+            published
+            author {
+                name
+            }
+            genres
+        }
+        distinctGenres
+    }
+`;
+
 export const LOGIN = gql`
     mutation login($username: String!, $password: String!){
         login(username: $username, password: $password) {
             value
+        }
+    }
+`
+
+export const MY_RECOMMENDATIONS = gql`
+    query {
+        myRecommendations {
+            title
+            published
+            genres
+            author {
+                name
+            }
+        }
+        me {
+            username
+            favoriteGenre
         }
     }
 `

@@ -63,4 +63,49 @@
     <td>Valmis</td>
     <td></td>
   </tr>
+  <tr>
+    <td>8.20</td>
+    <td>Valmis</td>
+    <td>Lisäsin backend:iin uniikit genrenimet hakevan kyselyn</td>
+  </tr>
+  <tr>
+    <td>8.21</td>
+    <td>Valmis</td>
+    <td>Lisäsin skeemaan queryn: GENRE_FILTERED_BOOKS  </td>
+  </tr>
+  <tr>
+    <td>8.22</td>
+    <td>Valmis</td>
+    <td>NewBook komponentin useMutation hookin parametri refetchQueries päivitetään lisättävän kirjan genremääritysten perusteella </td>
+  </tr>
 </table>
+
+
+##### Fragmentit ja subskriptiot
+
+
+<table>
+  <tr>
+    <th>Tehtävä</th>
+    <th>Tila</th>
+    <th>Huomioitavaa</th>
+  </tr>
+  <tr>
+    <td>8.24</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>8.25</td>
+    <td>Valmis</td>
+    <td>
+      Ainakin omasta mielestäni käyttöliittymä pysyy ajan tasalla.
+      <ul>
+        <li>- Kirjautuneen käyttäjän suosituksiin ilmestyy uusi kirja</li>
+        <li>- Genre-suodatettuun kirjalistaan ilmesyy uusi kirja</li>
+        <li>- Mahdolliset uudet genret ilmestyvät kirjalistan valintaboxiin</li>
+      </ul>
+    </td>
+  </tr>
+</table>
+

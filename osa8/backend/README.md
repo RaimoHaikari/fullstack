@@ -89,3 +89,18 @@
     </td>
   </tr>
 </table>
+
+##### Fragmentit ja subskriptiot
+
+<table>
+  <tr>
+    <th>Tehtävä</th>
+    <th>Tila</th>
+    <th>Huomioitavaa</th>
+  </tr>
+  <tr>
+    <td>8.23</td>
+    <td>Tehty</td>
+    <td></td>
+  </tr>
+</table>

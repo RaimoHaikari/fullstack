@@ -6,11 +6,10 @@ import { EDIT_AUTHOR } from "../queries";
 
 const SetAuthorBorn = ({ author, onClose }) => {
 
-    const [year, setYear] = useState(null)
+    const [year, setYear] = useState('')
 
 
     useEffect(() => {
-        console.log("... in uE")
 
         if(author.born)
             setYear(author.born)
@@ -36,6 +35,11 @@ const SetAuthorBorn = ({ author, onClose }) => {
 
         onClose()
 
+    }
+
+    const birthYearHandler = (val) => {
+        const updValue = val !== '' ? parseInt(val) : '';
+        setYear(updValue)
     }
 
     return (
@@ -64,7 +68,7 @@ const SetAuthorBorn = ({ author, onClose }) => {
                                 <input
                                     type="number"
                                     value={year}
-                                    onChange={({ target }) => setYear(parseInt(target.value))}
+                                    onChange={({ target }) => birthYearHandler(target.value)}
                                 />
                             </td>
                         </tr>

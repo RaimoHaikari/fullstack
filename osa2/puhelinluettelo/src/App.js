@@ -153,7 +153,7 @@ const App = () => {
 
     setTimeout(() => {
       setErrorMsg({msg: null, success: null})
-    }, 2000);
+    }, 5000);
   }
 
   /*
@@ -279,6 +279,7 @@ const App = () => {
           // Oletetaan, että ongelma johtui siirä, että henkilö oli jo poistettu
           setPersons(persons.filter(p => p.id !== contact[0].id))
 
+          // .... virhe....
           displayErrorMessage({
             msg: `${contact[0].name} was already probably already deleted from server. Please refresh the page.`,
             success: false
@@ -311,6 +312,8 @@ const App = () => {
         contacts={getFilteredContacts()}
         deleteHandler = {deleteHandler}
       />
+
+      <div><small><strong>Toimintoihin liittyviä viestejä pidetään näytöllä 5 sek ajan.</strong></small></div>
     </div>
   )
 

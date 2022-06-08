@@ -1,42 +1,38 @@
 import { useState } from "react";
 import { useQuery } from "@apollo/client";
 
-import { ALL_BOOKS } from "../queries";
+import { GENRE_FILTERED_BOOKS } from "../queries";
 
-const Books = (props) => {
+// props
+const Books = ({ filterWatch, show }) => {
+
+  const [selectedGenre, setSelectedGenre] = useState('all');
   
-  const [selectedGenre, setSelectedGenre] = useState('all')
-
-  const result = useQuery(
-    ALL_BOOKS, {
-      pollInterval: props.pollInterval
-    }
+  const {data, loading, error} = useQuery(
+    GENRE_FILTERED_BOOKS,
+    {variables: {genre: selectedGenre === 'all' ? null : selectedGenre}}
   )
 
-  if (!props.show) {
+
+  if (!show) {
     return null
   }
 
-  if(result.loading) {
+  if(loading) {
     return <div>Loading...</div>
   }
 
-  const books = result.data.allBooks
-  const genres = result.data.distinctGenres
+  const books = data.allBooks
+  const genres = data.distinctGenres
 
-  const getFilteredBookList = () => {
+  const updateGenreSelection = (val) => {
 
-    return books.filter(book => {
-
-      const gList = book.genres;
-
-      if(selectedGenre === 'all')
-        return true;
-
-      return book.genres.indexOf(selectedGenre) !== -1;
-    })
+    filterWatch(val)
+    setSelectedGenre(val)
 
   }
+
+
 
   const genreSelection = () => {
 
@@ -45,7 +41,10 @@ const Books = (props) => {
     return (
       <div>
         Select genre:
-        <select onChange={(e) => setSelectedGenre(e.target.value)}>
+        <select 
+          onChange={(e) => updateGenreSelection(e.target.value)}
+          defaultValue = { selectedGenre }
+        >
           {
             displayedGenreList.map((genre, index) => {
               return (
@@ -63,7 +62,6 @@ const Books = (props) => {
     )
   }
 
-  getFilteredBookList()
   
   return (
     <div>
@@ -81,7 +79,7 @@ const Books = (props) => {
             <th>published</th>
             <th>genres</th>
           </tr>
-          {getFilteredBookList().map((a) => (
+          {books.map((a) => (
             <tr key={a.title}>
               <td>{a.title}</td>
               <td>{a.author.name}</td>
