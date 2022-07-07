@@ -1,0 +1,10 @@
+POST http://localhost:3001/api/patients/
+Content-Type: application/json
+
+{
+        "name": "Wilma Eäkäleuka",
+        "dateOfBirth": "1900-01-01",
+        "ssn": "010100-666F",
+        "gender": "female",
+        "occupation": "International Adventurer"
+}
