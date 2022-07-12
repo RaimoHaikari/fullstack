@@ -18,6 +18,15 @@ Huomioitavaa:
         <li><a href="./osa1/anekdootit">anekdootit</a></li>
     </ul>
 	</li>
+	<li>Osa 2
+    <ul>
+        <li><a href="./osa2/kurssitiedot">kurssitiedot</a></li>
+        <li><a href="./osa2/maidentiedot">maidentiedot</a></li>
+        <li><a href="./osa2/puhelinluettelo">puhelinluetttelo</a></li>
+    </ul>
+	</li>
 </ul>
+
+
 
 

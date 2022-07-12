@@ -65,6 +65,11 @@
     <th>Huomioitavaa</th>
   </tr>
   <tr>
+    <td>2.15</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
     <td>2.16</td>
     <td>Valmis</td>
     <td></td>
@@ -97,7 +102,7 @@
   </tr>
   <tr>
     <td>2.20</td>
-    <td>Kesken....</td>
-    <td></td>
+    <td>Valmis</td>
+    <td>Jo poistettu tieto jää edelleen näkymään listalle, mutta listan päivitystä ei tehtävässä edellytetty</td>
   </tr>
 </table>

@@ -218,7 +218,7 @@ const App = () => {
       contactServices
         .update(person.id, updatedContact)
         .then(returnedContact => {
-          
+
           displayErrorMessage({
             msg: `${returnedContact.name}: number ${oldNumber} updated to ${returnedContact.number}`,
             success: true
@@ -227,6 +227,18 @@ const App = () => {
           setPersons(persons.map(p => p.id === person.id ? returnedContact : p))
           setNewName('')
           setNewNumber('')
+        })
+        .catch(error => {
+
+          console.log("Vittu tänne tultiin");
+
+          // .... virhe....
+          displayErrorMessage({
+            msg: `${person.name} has already been removed from server. Please refresh the page`,
+            success: false
+          })
+    
+
         })
 
     }    
@@ -292,7 +304,7 @@ const App = () => {
 
   return (
     <div>
-      <h2>Phonebook</h2>
+      <h2>Phonebook...</h2>
       <Notification 
         message={errorMsg.msg}
         success={errorMsg.success}
