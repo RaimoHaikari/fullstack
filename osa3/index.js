@@ -185,7 +185,7 @@ app.post('/api/persons', (req,res, next) => {
 });
 
 /*
- * Tietueen päivitys
+ * 3.17 Tietueen päivitys
  */
 app.put('/api/persons/:id', (req, res, next) => {
 
@@ -216,7 +216,7 @@ const unknownEndpoint = (request, response) => {
 app.use(unknownEndpoint);
 
 /*
- * Virheenkäsittelijä MIDDLEWARE
+ * 3.16 Virheenkäsittelijä MIDDLEWARE
  * - pitää lisätä viimeisenä middlewarena
  *
  * - 3.19: puhelinluettelo ja tietokanta, step7

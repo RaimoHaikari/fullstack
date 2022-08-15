@@ -1,0 +1,132 @@
+# Full Stack open 2022
+## Raimo Haikari
+
+---
+
+### Osa 3
+
+##### Node.js ja Express
+
+<table>
+  <tr>
+    <th>Tehtävä</th>
+    <th>Tila</th>
+    <th>Huomioitavaa</th>
+  </tr>
+  <tr>
+    <td>3.1</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.2</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.3</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.4</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.5</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.6</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.7</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.8</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.9</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.10</td>
+    <td>Valmis</td>
+    <td>https://nameless-eyrie-43174.herokuapp.com/</td>
+  </tr>
+  <tr>
+    <td>3.11</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.12</td>
+    <td>Valmis</td>
+    <td>Tosin lisäyksen jälkeen tulostaa: "added to database"...</td>
+  </tr>
+  <tr>
+    <td>3.13</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.14</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.15</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.16</td>
+    <td>Valmis</td>
+    <td>index.js tiedostossa sijaitseva errorHandler -funktio</td>
+  </tr>
+  <tr>
+    <td>3.17</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.18</td>
+    <td>Valmis</td>
+    <td>
+        <ul>
+          <li>https://nameless-eyrie-43174.herokuapp.com/info</li>
+          <li>https://nameless-eyrie-43174.herokuapp.com/api/persons/</li>
+          <li>https://nameless-eyrie-43174.herokuapp.com/api/persons/61eb11233e3fe7dfb962c1f9</li>
+        <ul>
+    </td>
+  </tr>
+  <tr>
+    <td>3.19</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.20</td>
+    <td>Valmis</td>
+    <td>Huom! Tulkisin niin, että numero väliviivoinen pitää olla vähintään 8 merkkiä</td>
+  </tr>
+  <tr>
+    <td>3.21</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+  <tr>
+    <td>3.22</td>
+    <td>Valmis</td>
+    <td></td>
+  </tr>
+</table>

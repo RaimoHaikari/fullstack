@@ -12,19 +12,23 @@ Huomioitavaa:
 <ul>
 	<li><a href="./osa0">Osa 0</a></li>
 	<li>Osa 1
-    <ul>
-        <li><a href="./osa1/kurssitiedot">kurssitiedot</a></li>
-        <li><a href="./osa1/unicafe">unicafe</a></li>
-        <li><a href="./osa1/anekdootit">anekdootit</a></li>
-    </ul>
+        <ul>
+            <li><a href="./osa1/kurssitiedot">kurssitiedot</a></li>
+            <li><a href="./osa1/unicafe">unicafe</a></li>
+            <li><a href="./osa1/anekdootit">anekdootit</a></li>
+        </ul>
 	</li>
 	<li>Osa 2
-    <ul>
-        <li><a href="./osa2/kurssitiedot">kurssitiedot</a></li>
-        <li><a href="./osa2/maidentiedot">maidentiedot</a></li>
-        <li><a href="./osa2/puhelinluettelo">puhelinluetttelo</a></li>
-    </ul>
+        <ul>
+            <li><a href="./osa2/kurssitiedot">kurssitiedot</a></li>
+            <li><a href="./osa2/maidentiedot">maidentiedot</a></li>
+            <li><a href="./osa2/puhelinluettelo">puhelinluetttelo</a></li>
+        </ul>
 	</li>
+    <li>Osa 3
+        <ul><a href="./osa3">Osa 3</a></ul>
+        <ul><li>https://nameless-eyrie-43174.herokuapp.com/</li></ul>
+    <li>
 </ul>
 
 
