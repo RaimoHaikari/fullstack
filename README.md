@@ -26,9 +26,11 @@ Huomioitavaa:
         </ul>
 	</li>
     <li>Osa 3
-        <ul><a href="./osa3">Osa 3</a></ul>
-        <ul><li>https://nameless-eyrie-43174.herokuapp.com/</li></ul>
-    <li>
+        <ul>
+            <li><a href="./osa3">Osa 3</a></li>
+            <li>https://nameless-eyrie-43174.herokuapp.com/</li>
+        </ul>
+    </li>
 </ul>
 
 
