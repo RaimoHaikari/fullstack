@@ -9,6 +9,9 @@ const Comment = require('../models/comment');
 
 
 /*
+ * 4.20*: blogilistan laajennus, step8
+ * - pääsevät routet tokeniin käsiksi suoraan viittaamalla request.token
+ * 
  * Käyttöoikeuksien tarkistamisen apufunktio.
  */
 const checkAuthentication = (request, ownerId) => {
@@ -192,7 +195,7 @@ blogsRouter.post('/:id/comments', async (req, res, next) => {
 
         // Haetaan kommentoitava blogi
         const blogToBeCommented = await Blog.findById(req.params.id);
-console.log(blogToBeCommented)
+//console.log(blogToBeCommented);
 
         // Luodaan ja talletetaan kommentti
         const comment = new Comment({
@@ -201,7 +204,7 @@ console.log(blogToBeCommented)
         });
 
         const savedComment = await comment.save();
-console.log(savedComment)
+//console.log(savedComment);
 
         // Liitetään blogitietueeseen tieto lisätystä kommentista
         blogToBeCommented.comments = blogToBeCommented.comments.concat(savedComment._id);

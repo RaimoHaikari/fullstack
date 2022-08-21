@@ -254,6 +254,37 @@ describe('when there are initially some blogs saved', () => {
                 expect(response.body).toHaveLength(helper.initialBlogs.length);
 
         });
+
+        /*
+         * 4.23*: blogilistan laajennus, step11
+         * - Tee testi, joka varmistaa, että sovellukseen voi lisätä blogeja
+         *   osoitteeseen /api/blogs tapahtuvalla HTTP POST -pyynnöllä. 
+         */
+        test('blog will not be added if token is missing', async() => {
+
+            const newBlog = {
+                title: "It is about time to change tires",
+                author: "I B Freely",
+                url: "http://flattires.com",
+                likes: 3,
+            }
+            
+    
+            await api
+                .post('/api/blogs')
+                .send(newBlog)
+                .expect(401)
+                .expect('Content-Type', /application\/json/);
+
+    
+            const response = await api.get('/api/blogs');
+    
+            const titles = response.body.map(r => r.title);
+    
+            expect(response.body).toHaveLength(helper.initialBlogs.length);
+            expect(titles).not.toContain(newBlog.title);
+        
+        })
     });
 
 
@@ -367,9 +398,15 @@ describe('when there are initially some blogs saved', () => {
             // Tiputetaan vertailusta dokumentin omistajan id
             delete updatedBlog.body.user;
 
+            /*
+             * Vertaillaan objektien yhteneväisyyttä, joten päivitän modifioidun blogiobjketin
+             * id-tunnuksen vastaamaan alkuperäisen objektin id-tunnusta ja lisään tyhjän
+             * kommetit -taulukon.
+             */
             expect(updatedBlog.body).toEqual({
                 ...modifiedBlog,
                 id: blogToUpdate.id,
+                comments: []
             });
 
         });
