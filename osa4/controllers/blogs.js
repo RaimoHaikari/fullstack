@@ -88,12 +88,14 @@ const getTokenFrom = request => {
 
 blogsRouter.get('/', async (req, res) => {
 
+
     const blogs =  await Blog
         .find({})
         .populate('user')
         .populate('comments', 'content');
         
     res.json(blogs)
+    
 });
 
 

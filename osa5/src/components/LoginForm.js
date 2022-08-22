@@ -37,6 +37,30 @@ const LoginForm = ({ password, passwordChangeHandler, username, usernameChangeHa
         id="blogAppLoginFormSubmitButton"
       >Login</button>
 
+      <p>Kirjautumaan pääsee tunnuksilla:</p>
+
+      <table>
+        <tbody>
+          <tr>
+            <th>username</th>
+            <th>password</th>
+          </tr>
+          <tr>
+            <td>tilli</td>
+            <td>accad</td>
+          </tr>
+          <tr>
+            <td>ebba</td>
+            <td>accad</td>
+          </tr>
+          <tr>
+            <td>mluukkai</td>
+            <td>salainen</td>
+          </tr>
+        </tbody>
+
+      </table>
+
     </form>
   )
 }

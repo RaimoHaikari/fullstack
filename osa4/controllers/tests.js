@@ -13,6 +13,8 @@ const Blog = require('../models/blog');
 
 testsRouter.post('/reset', async(req, res) => {
 
+    console.log("in testRouter reset")
+
     await Blog.deleteMany({});
     await User.deleteMany({});
 

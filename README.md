@@ -36,6 +36,11 @@ Huomioitavaa:
             <li><a href="./osa4">Osa 4</a></li>
         </ul>
     </li>
+    <li>Osa 5
+        <ul>
+            <li><a href="./osa5">Osa 5</a></li>
+        </ul>
+    </li>
 </ul>
 
 
