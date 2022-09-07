@@ -61,7 +61,7 @@
   <tr>
     <td>6.12*</td>
     <td>valmis</td>
-    <td></td>
+    <td>Kirjainkokoa ei oteta huomioon anekdootteja suodatessa.</td>
   </tr>
   <tr>
     <td>6.13</td>

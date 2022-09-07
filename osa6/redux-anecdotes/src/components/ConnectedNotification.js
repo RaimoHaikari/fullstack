@@ -33,12 +33,20 @@ const Notification = (props) => {
   )
 }
 
+/*
+ * Kun tämä välitetään parametrinä, niin komponentin sisällä mahdollista viitata storen tilaan propsin kautta. 
+ */
 const mapStateToProps = (state) => {
     return {
         notification: state.notification
     }
 }
 
+/*
+ * Funktion connect ensimmäisenä parametrina voidaan määritellä funktio mapStateToProps, 
+ * joka liittää joitakin storen tilan perusteella määriteltyjä asioita connect-funktiolla 
+ * muodostetun yhdistetyn komponentin propseiksi
+ */
 const ConnectedNotification = connect(mapStateToProps)(Notification)
 
 export default ConnectedNotification

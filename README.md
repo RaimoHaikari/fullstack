@@ -41,6 +41,12 @@ Huomioitavaa:
             <li><a href="./osa5">Osa 5</a></li>
         </ul>
     </li>
+	<li>Osa 6
+        <ul>
+            <li><a href="./osa6/unicafe-redux">Tehtävät 6.1 - 6.2</a></li>
+            <li><a href="./osa6/redux-anecdotes">Tehtävät 6.3 - 6.21</a></li>
+        </ul>
+	</li>
 </ul>
 
 

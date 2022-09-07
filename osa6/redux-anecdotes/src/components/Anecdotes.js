@@ -55,8 +55,10 @@ const Anecdotes = () => {
 
         let items = [...state.anecdotes]
 
+        console.log("... ", filterSrt)
+
         if(filterSrt !== null)
-            items = items.filter(item => item.content.includes(filterSrt))
+            items = items.filter(item => item.content.toLowerCase().includes(filterSrt.toLowerCase()))
         
 
 
