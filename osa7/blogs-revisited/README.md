@@ -7,6 +7,8 @@
 
 ##### blogilistan laajennus
 
+<p>Huom! palvelimena toimii osassa 4 toteuttu backend, joka pitää käynnistää, jotta frontti toimii!</p>
+
 <table>
   <tr>
     <th>Tehtävä</th>
@@ -26,7 +28,7 @@
   <tr>
     <td>7.11</td>
     <td>valmis</td>
-    <td>Jätin uuden blogin lisäyksen hoitavan tapahtumankäsittelijän edeelleen App -komponenttiin, vaikka tapahtumankäsittelijänkin oikeastaan olisi voinut siirtää NewBlog-komponenttiin</td>
+    <td>Jätin uuden blogin lisäyksen hoitavan tapahtumankäsittelijän ededlleen App -komponenttiin, vaikka tapahtumankäsittelijänkin oikeastaan olisi voinut siirtää NewBlog-komponenttiin</td>
   </tr>
   <tr>
     <td>7.12</td>

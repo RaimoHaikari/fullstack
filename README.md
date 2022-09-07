@@ -47,6 +47,11 @@ Huomioitavaa:
             <li><a href="./osa6/redux-anecdotes">Tehtävät 6.3 - 6.21</a></li>
         </ul>
 	</li>
+    <li>Osa 7
+        <ul>
+            <li><a href="./osa7">Osan 7 tehtävien vastaukset</a></li>
+        </ul>
+    </li>
 </ul>
 
 

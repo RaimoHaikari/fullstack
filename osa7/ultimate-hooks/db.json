@@ -15,6 +15,10 @@
     {
       "content": "oi aikoja, oi tapoja",
       "id": 4
+    },
+    {
+      "content": "Miten ihmeessä tämä toimikaan",
+      "id": 5
     }
   ],
   "persons": [
@@ -32,6 +36,11 @@
       "name": "zarahustra",
       "number": "03 69",
       "id": 3
+    },
+    {
+      "name": "Hertta",
+      "number": "09 98 78 66",
+      "id": 4
     }
   ]
 }

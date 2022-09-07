@@ -5,6 +5,10 @@
 
 ### Osa 7
 
+<p>Huom! Tehtävät 7.10 - 7.21 edellyttävät, että osassa 4 toteutettu palvelin käynnistetään.</p>
+
+#### routed anecdotes
+
 <table>
   <tr>
     <th>Tehtävä</th>
@@ -41,16 +45,31 @@
     <td><a href="./routed-anecdotes">routed-anecdotes</a></td>
     <td>Jepulis :)</td>
   </tr>
+</table>
+
+#### country hook
+
+<table>
   <tr>
     <td>7.7</td>
     <td><a href="./country-hook">country-hook</a></td>
     <td>Jepulis :)</td>
   </tr>
+</table>
+
+#### ultimate hooks
+
+<table>
   <tr>
     <td>7.8</td>
     <td><a href="./ultimate-hooks">ultimate-hooks</a></td>
     <td>Jepulis :)</td>
   </tr>
+</table>
+
+#### blogilistan laajennus
+
+<table>
     <tr>
     <td>7.9</td>
     <td><a href="./blogs-revisited">Blogilistan laajennus</a></td>
