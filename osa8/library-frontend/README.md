@@ -107,5 +107,10 @@
       </ul>
     </td>
   </tr>
+  <tr>
+    <td>8.26</td>
+    <td>Jätin tekemättä :(</td>
+    <td></td>
+  </tr>
 </table>
 

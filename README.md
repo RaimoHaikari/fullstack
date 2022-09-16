@@ -52,6 +52,12 @@ Huomioitavaa:
             <li><a href="./osa7">Osan 7 tehtävien vastaukset</a></li>
         </ul>
     </li>
+    <li>Osa 8
+        <ul>
+            <li><a href="./osa8">Osan 8 tehtävien vastaukset</a></li>
+            <li>Tein tehtävät 8.1 -8.25. En tehnyt tehtävää 8.26.</li>
+        </ul>
+    </li>
 </ul>
 
 
